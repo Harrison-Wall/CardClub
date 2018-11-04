@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class GameInfoAdapter extends ArrayAdapter <GameInfo>
 {
-
-    public GameInfoAdapter(Context context, ArrayList<GameInfo> games, ViewGroup parent)
+    public GameInfoAdapter(Context context, ArrayList<GameInfo> games)
     {
         super(context, 0, games);
     }
@@ -31,12 +31,12 @@ public class GameInfoAdapter extends ArrayAdapter <GameInfo>
         // get the info the the game at the current position
         GameInfo currentGame = getItem(position);
 
-        
+        TextView gameName = (TextView) listItemView.findViewById(R.id.game_name); // get the game name view from the list item
 
+        gameName.setText( currentGame.getName() );
 
+        //TODO: sepeate Colors, Images, Icons
 
-
-
-        return super.getView(position, convertView, parent);
+        return listItemView;
     }
 }
