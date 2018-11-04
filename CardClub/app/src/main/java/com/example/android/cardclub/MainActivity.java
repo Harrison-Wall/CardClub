@@ -53,10 +53,7 @@ public class MainActivity extends AppCompatActivity
         switch(gameNum)
         {
             case 0:
-                gameIntent = new Intent(MainActivity.this, MainActivity.class); // Solitaire
-                break;
-            default:
-                gameIntent = new Intent(MainActivity.this, MainActivity.class); // Stay Here
+                gameIntent = new Intent(MainActivity.this, Solitaire.class); // Solitaire
                 break;
         }
 
