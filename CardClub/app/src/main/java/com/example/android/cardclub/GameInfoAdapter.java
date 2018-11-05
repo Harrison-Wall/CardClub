@@ -35,7 +35,7 @@ public class GameInfoAdapter extends ArrayAdapter <GameInfo>
 
         gameName.setText( currentGame.getName() );
 
-        //TODO: sepeate Colors, Images, Icons
+        // TODO: seperate Colors, Images, Icons
 
         return listItemView;
     }

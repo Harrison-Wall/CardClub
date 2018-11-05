@@ -6,6 +6,7 @@ public class Card
     private int iValue;                 //1-13
     private int iSuit;                  //0-3
     private boolean faceUp;
+
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
 
     Card()

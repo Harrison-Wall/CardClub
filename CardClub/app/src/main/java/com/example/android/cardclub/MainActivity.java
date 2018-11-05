@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity
         final ArrayList<GameInfo> games = new ArrayList<GameInfo>();
         games.add(new GameInfo(0, "Solitaire"));
 
+        // TODO: Add more games
+
         //set the adapter
         GameInfoAdapter myAdapter = new GameInfoAdapter(this, games);
 
