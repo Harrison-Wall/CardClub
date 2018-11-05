@@ -1,19 +1,16 @@
 package com.example.android.cardclub;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.Gallery;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-public class Solitaire extends AppCompatActivity
+public class Solitaire extends Activity
 {
-
     @Override
-    protected void onCreate(Bundle savedInstancestate)
+    protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstancestate);
+        super.onCreate(savedInstanceState);
 
 
+        
     }
 }
