@@ -98,6 +98,16 @@ public class Card
         faceUp = !faceUp;
     }
 
+    public void turnUp()
+    {
+        faceUp = true;
+    }
+
+    public void turnDown()
+    {
+        faceUp = false;
+    }
+
     /**
      * Determine if the card is red or black.
      * @return bRed (boolean)
