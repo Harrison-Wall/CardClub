@@ -11,6 +11,6 @@ public class Solitaire extends Activity
         super.onCreate(savedInstanceState);
 
 
-        
+
     }
 }
