@@ -3,7 +3,6 @@ package com.example.android.cardclub;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.Gravity;
 
 public class Card
 {

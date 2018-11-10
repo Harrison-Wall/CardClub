@@ -22,6 +22,9 @@ public class GameView extends SurfaceView implements Runnable
     // Card to draw
     private Card c1;
 
+    // Enemy Card
+    private EnemyCard[] enemies;
+
     // Used for drawing
     private Paint paint;
     private Canvas canvas;
@@ -34,6 +37,11 @@ public class GameView extends SurfaceView implements Runnable
 
         // Set up the card
         c1 = new Card(context, ScreenX, ScreenY);
+
+        enemies = new EnemyCard[3];
+        enemies[0] = new EnemyCard(context, ScreenX, ScreenY);
+        enemies[1] = new EnemyCard(context, ScreenX, ScreenY);
+        enemies[2] = new EnemyCard(context, ScreenX, ScreenY);
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -60,6 +68,11 @@ public class GameView extends SurfaceView implements Runnable
     {
         //updating player position
         c1.update();
+
+        //update enemy position
+        enemies[0].update((c1.getSpeed()));
+        enemies[1].update((c1.getSpeed()));
+        enemies[2].update((c1.getSpeed()));
     }
 
     private void draw()
@@ -73,6 +86,12 @@ public class GameView extends SurfaceView implements Runnable
             canvas.drawColor(Color.BLUE);
             //Drawing the player
             canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
+
+            //Draw enemies
+            canvas.drawBitmap(enemies[0].getBmap(), enemies[0].getX(), enemies[0].getY(), paint);
+            canvas.drawBitmap(enemies[1].getBmap(), enemies[1].getX(), enemies[1].getY(), paint);
+            canvas.drawBitmap(enemies[2].getBmap(), enemies[2].getX(), enemies[2].getY(), paint);
+
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
         }
