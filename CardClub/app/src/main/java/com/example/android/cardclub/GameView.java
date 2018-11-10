@@ -1,4 +1,4 @@
-package com.example.android.cardclub.testClasses;
+package com.example.android.cardclub;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,19 +9,19 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.android.cardclub.R;
+// Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
 
-public class BallView extends SurfaceView implements SurfaceHolder.Callback
+public class GameView extends SurfaceView implements SurfaceHolder.Callback
 {
     private Bitmap bitmap ;
     private int x=20,y=20;int width,height;
 
-    public BallView(Context context, int w, int h)
+    public GameView(Context context, int w, int h)
     {
         super(context);
 
-        width = w;
-        height = h;
+        width=w;
+        height=h;
         getHolder().addCallback(this);
         setFocusable(true);
     }
@@ -36,7 +36,7 @@ public class BallView extends SurfaceView implements SurfaceHolder.Callback
 
         myop.inDensity = 450;
 
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.c_2 , myop);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.h_2, myop);
 
         canvas.drawBitmap(bitmap,x-(bitmap.getWidth()/8),y-(bitmap.getHeight()/8),null);
     }
@@ -47,7 +47,7 @@ public class BallView extends SurfaceView implements SurfaceHolder.Callback
         x=(int)event.getX();
         y=(int)event.getY();
 
-        updateBall();
+        updateView();
 
         return true;
     }
@@ -70,7 +70,7 @@ public class BallView extends SurfaceView implements SurfaceHolder.Callback
         // TODO Auto-generated method stub
     }
 
-    private void updateBall()
+    private void updateView()
     {
         Canvas canvas = null;
 
@@ -90,4 +90,5 @@ public class BallView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
     }
+
 }

@@ -2,30 +2,49 @@ package com.example.android.cardclub;
 
 public class Card
 {
-    private int ID;                     //1-52
-    private int iValue;                 //1-13
-    private int iSuit;                  //0-3
-    private boolean faceUp;
+    private int mID;                     //1-52
+    private int miValue;                 //1-13
+    private int miSuit;                  //0-3
+    private boolean mfaceUp;
+
+    // Info for drawing
+    private int mCurrX, mCurrY, mOldX, mOldY, mHieght, mWidth;
 
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
 
     Card()
     {
-        ID = iCounter;
-        iValue = 1;
-        iSuit = 0;
-        faceUp = false;
+        mID = iCounter;
+        miValue = 1;
+        miSuit = 0;
+        mfaceUp = false;
         iCounter++;
     }
 
     Card(int pValue, int pSuit, boolean pFace)
     {
-        ID = iCounter;
-        iValue = pValue;
-        iSuit = pSuit;
-        faceUp = pFace;
+        mID = iCounter;
+        miValue = pValue;
+        miSuit = pSuit;
+        mfaceUp = pFace;
         iCounter++;
     }
+
+    Card(int pValue, int pSuit, boolean pFace, int pX, int pY, int pHeight, int pWidth)
+    {
+        mID = iCounter;
+        miValue = pValue;
+        miSuit = pSuit;
+        mfaceUp = pFace;
+
+        mCurrX = pX;
+        mCurrY = pY;
+        mHieght = pHeight;
+        mWidth = pWidth;
+
+        iCounter++;
+    }
+
 
     /**
      * The ID is Used to keep track of Every Card.
@@ -33,7 +52,7 @@ public class Card
      */
     public int getID()
     {
-        return ID;
+        return mID;
     }
 
     /**
@@ -42,7 +61,7 @@ public class Card
      */
     public void setID(int pID)
     {
-        ID = pID;
+        mID = pID;
     }
 
     /**
@@ -51,7 +70,7 @@ public class Card
      */
     public int getSuit()
     {
-        return iSuit;
+        return miSuit;
     }
 
     /**
@@ -60,7 +79,7 @@ public class Card
      */
     public void setSuit(int pSuit)
     {
-        iSuit = pSuit;
+        miSuit = pSuit;
     }
 
     /**
@@ -69,7 +88,7 @@ public class Card
      */
     public int getValue()
     {
-        return iValue;
+        return miValue;
     }
 
     /**
@@ -78,7 +97,7 @@ public class Card
      */
     public void setValue(int pValue)
     {
-        iValue = pValue;
+        miValue = pValue;
     }
 
     /**
@@ -87,7 +106,7 @@ public class Card
      */
     public boolean isFaceUp()
     {
-        return faceUp;
+        return mfaceUp;
     }
 
     /**
@@ -95,17 +114,17 @@ public class Card
      */
     public void turnOver()
     {
-        faceUp = !faceUp;
+        mfaceUp = !mfaceUp;
     }
 
     public void turnUp()
     {
-        faceUp = true;
+        mfaceUp = true;
     }
 
     public void turnDown()
     {
-        faceUp = false;
+        mfaceUp = false;
     }
 
     /**
@@ -114,7 +133,7 @@ public class Card
      */
     public boolean isRed()
     {
-        return (iSuit == 1 || iSuit == 2);
+        return (miSuit == 1 || miSuit == 2);
     }
 
     /**
@@ -124,6 +143,58 @@ public class Card
     {
         iCounter = 1;
         return;
+    }
+
+    public int getCurrX()
+    {
+        return mCurrX;
+    }
+
+    public void setmCurrX(int pX)
+    {
+        mOldX = mCurrX;
+        mCurrX = pX;
+    }
+
+    public int getCurrY()
+    {
+        return mCurrY;
+    }
+
+    public void setCurrY(int pY)
+    {
+        mOldY = mCurrY;
+        mCurrY = pY;
+    }
+
+    public int getOldX()
+    {
+        return mOldX;
+    }
+
+    public int getOldY()
+    {
+        return mOldY;
+    }
+
+    public int getHieght()
+    {
+        return mHieght;
+    }
+
+    public void setHieght(int pHiehgt)
+    {
+        mHieght = pHiehgt;
+    }
+
+    public int getWidth()
+    {
+        return mWidth;
+    }
+
+    public void setmWidth(int pWidth)
+    {
+        mWidth = pWidth;
     }
 
 }
