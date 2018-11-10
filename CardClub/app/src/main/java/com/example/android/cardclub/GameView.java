@@ -33,8 +33,7 @@ public class GameView extends SurfaceView implements Runnable
         super(context);
 
         // Set up the card
-        c1 = new Card();
-        c1.setFaceMap(context, R.drawable.c_2);
+        c1 = new Card(context, ScreenX, ScreenY);
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -125,12 +124,11 @@ public class GameView extends SurfaceView implements Runnable
         {
             case MotionEvent.ACTION_UP:
                 //When the user presses on the screen
-                //we will do something here
-
+                c1.stopBoosting();
                 break;
             case MotionEvent.ACTION_DOWN:
                 //When the user releases the screen
-                //do something here
+                c1.setBoosting();
                 break;
         }
         return true;

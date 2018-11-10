@@ -77,6 +77,21 @@ public class Card
         iCounter++;
     }
 
+    /**TEMP Delete Later**/
+    Card(Context context, int pX, int pY)
+    {
+        mCurrY = 50;
+        mCurrY = 75;
+        setFaceMap(context, R.drawable.c_2);
+
+        // Calculate Max Y
+        maxY = pY - mFace.getHeight();
+
+        minY = 0;
+
+        boosting = false;
+    }
+
 
     /**
      * The ID is Used to keep track of Every Card.
