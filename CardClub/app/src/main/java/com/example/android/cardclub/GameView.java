@@ -1,94 +1,139 @@
 package com.example.android.cardclub;
 
+// Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
+// Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
+
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-// Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
-
-public class GameView extends SurfaceView implements SurfaceHolder.Callback
+public class GameView extends SurfaceView implements Runnable
 {
-    private Bitmap bitmap ;
-    private int x=20,y=20;int width,height;
+    //boolean variable to track if the game is playing or not
+    volatile boolean playing;
 
-    public GameView(Context context, int w, int h)
+    //the game thread
+    private Thread gameThread = null;
+
+    // Card to draw
+    private Card c1;
+
+    // Used for drawing
+    private Paint paint;
+    private Canvas canvas;
+    private SurfaceHolder sHolder;
+
+    //Class constructor
+    public GameView(Context context, int ScreenX, int ScreenY)
     {
         super(context);
 
-        width=w;
-        height=h;
-        getHolder().addCallback(this);
-        setFocusable(true);
+        // Set up the card
+        c1 = new Card();
+        c1.setFaceMap(context, R.drawable.c_2);
+
+        // Set up paint. surface etc
+        sHolder = getHolder();
+        paint = new Paint();
     }
 
     @Override
-    protected void onDraw(Canvas canvas)
+    public void run()
     {
-        canvas.drawColor(Color.BLUE);//To make background
-        super.onDraw(canvas);
+        while (playing)
+        {
+            //to update the frame
+            update();
 
-        BitmapFactory.Options myop = new BitmapFactory.Options();
+            //to draw the frame
+            draw();
 
-        myop.inDensity = 450;
-
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.h_2, myop);
-
-        canvas.drawBitmap(bitmap,x-(bitmap.getWidth()/8),y-(bitmap.getHeight()/8),null);
+            //to control
+            control();
+        }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event)
+    private void update()
     {
-        x=(int)event.getX();
-        y=(int)event.getY();
-
-        updateView();
-
-        return true;
+        //updating player position
+        c1.update();
     }
 
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
+    private void draw()
     {
-        // TODO Auto-generated method stub
+        //checking if surface is valid
+        if (sHolder.getSurface().isValid())
+        {
+            //locking the canvas
+            canvas = sHolder.lockCanvas();
+            //drawing a background color for canvas
+            canvas.drawColor(Color.BLUE);
+            //Drawing the player
+            canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
+            //Unlocking the canvas
+            sHolder.unlockCanvasAndPost(canvas);
+        }
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder)
+    private void control()
     {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder)
-    {
-        // TODO Auto-generated method stub
-    }
-
-    private void updateView()
-    {
-        Canvas canvas = null;
-
         try
         {
-            canvas = getHolder().lockCanvas(null);
-            synchronized (getHolder())
-            {
-                this.draw(canvas);
-            }
+            gameThread.sleep(17);
         }
-        finally
+        catch (InterruptedException e)
         {
-            if (canvas != null)
-            {
-                getHolder().unlockCanvasAndPost(canvas);
-            }
+            e.printStackTrace();
         }
+    }
+
+    public void pause()
+    {
+        //when the game is paused
+        //setting the variable to false
+        playing = false;
+        try
+        {
+            //stopping the thread
+            gameThread.join();
+        }
+        catch (InterruptedException e)
+        {
+
+        }
+    }
+
+    public void resume()
+    {
+        //when the game is resumed
+        //starting the thread again
+        playing = true;
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent)
+    {
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
+        {
+            case MotionEvent.ACTION_UP:
+                //When the user presses on the screen
+                //we will do something here
+
+                break;
+            case MotionEvent.ACTION_DOWN:
+                //When the user releases the screen
+                //do something here
+                break;
+        }
+        return true;
     }
 
 }

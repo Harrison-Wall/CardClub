@@ -11,6 +11,15 @@ import android.view.SurfaceView;
 
 import com.example.android.cardclub.R;
 
+/*
+        // Add this to the activity's onCreate method
+        int w=getWindowManager().getDefaultDisplay().getWidth()-25;
+        int h=getWindowManager().getDefaultDisplay().getHeight()-25;
+
+        GameView gView = new GameView(this, w, h);
+        setContentView(gView);
+ */
+
 public class BallView extends SurfaceView implements SurfaceHolder.Callback
 {
     private Bitmap bitmap ;

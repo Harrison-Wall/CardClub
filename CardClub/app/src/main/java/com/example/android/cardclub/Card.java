@@ -1,5 +1,10 @@
 package com.example.android.cardclub;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.Gravity;
+
 public class Card
 {
     private int mID;                     //1-52
@@ -9,8 +14,29 @@ public class Card
 
     // Info for drawing
     private int mCurrX, mCurrY, mOldX, mOldY, mHieght, mWidth;
+    private Bitmap mFace, mBack;
 
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
+
+
+    /*
+    * TEMP DELETE LATER
+    * */
+    private int speed = 0;
+
+    //boolean variable to track the ship is boosting or not
+    private boolean boosting;
+
+    //Gravity Value to add gravity effect on the ship
+    private final int GRAVITY = -10;
+
+    //Controlling Y coordinate so that ship won't go outside the screen
+    private int maxY;
+    private int minY;
+
+    //Limit the bounds of the ship's speed
+    private final int MIN_SPEED = 1;
+    private final int MAX_SPEED = 20;
 
     Card()
     {
@@ -19,6 +45,12 @@ public class Card
         miSuit = 0;
         mfaceUp = false;
         iCounter++;
+
+        // TEMP DELETE LATER
+        //setting the boosting value to false initially
+        boosting = false;
+        speed = 1;
+
     }
 
     Card(int pValue, int pSuit, boolean pFace)
@@ -195,6 +227,81 @@ public class Card
     public void setmWidth(int pWidth)
     {
         mWidth = pWidth;
+    }
+
+    public Bitmap getFaceMap()
+    {
+        return mFace;
+    }
+
+    public void setFaceMap(Context context, int resID)
+    {
+        mFace = BitmapFactory.decodeResource(context.getResources(), resID);
+    }
+
+    public void setBackMap(Context context, int resID)
+    {
+        mBack = BitmapFactory.decodeResource(context.getResources(), resID);
+    }
+
+    public Bitmap getBackMap()
+    {
+        return mBack;
+    }
+
+
+    /*********TEMPORARY WHILE LEARNING THIS SHIT*********/
+    //Method to update coordinate of character
+    public void update()
+    {
+        //if the ship is boosting
+        if (boosting) {
+            //speeding up the ship
+            speed += 2;
+        } else {
+            //slowing down if not boosting
+            speed -= 5;
+        }
+        //controlling the top speed
+        if (speed > MAX_SPEED) {
+            speed = MAX_SPEED;
+        }
+        //if the speed is less than min speed
+        //controlling it so that it won't stop completely
+        if (speed < MIN_SPEED) {
+            speed = MIN_SPEED;
+        }
+
+        // Move card down
+        mCurrY -= speed + GRAVITY;
+
+        //but controlling it also so that it won't go off the screen
+        if (mCurrY < minY)
+        {
+            mCurrY = minY;
+        }
+
+        if (mCurrY > maxY)
+        {
+
+            mCurrY = maxY;
+        }
+    }
+
+    // get current speed
+    public int getSpeed()
+    {
+        return speed;
+    }
+
+    //setting boosting true
+    public void setBoosting() {
+        boosting = true;
+    }
+
+    //setting boosting false
+    public void stopBoosting() {
+        boosting = false;
     }
 
 }
