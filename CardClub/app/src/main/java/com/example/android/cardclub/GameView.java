@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -73,6 +74,20 @@ public class GameView extends SurfaceView implements Runnable
         enemies[0].update((c1.getSpeed()));
         enemies[1].update((c1.getSpeed()));
         enemies[2].update((c1.getSpeed()));
+
+        //Detect collisions
+        if(Rect.intersects(c1.getDetectCollision(), enemies[0].getDetectCollision() ) )
+        {
+            enemies[0].setX(-200);
+        }
+        if(Rect.intersects(c1.getDetectCollision(), enemies[1].getDetectCollision() ) )
+        {
+            enemies[1].setX(-200);
+        }
+        if(Rect.intersects(c1.getDetectCollision(), enemies[2].getDetectCollision() ) )
+        {
+            enemies[2].setX(-200);
+        }
     }
 
     private void draw()

@@ -3,6 +3,7 @@ package com.example.android.cardclub;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 public class Card
 {
@@ -16,7 +17,6 @@ public class Card
     private Bitmap mFace, mBack;
 
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
-
 
     /*
     * TEMP DELETE LATER
@@ -36,6 +36,8 @@ public class Card
     //Limit the bounds of the ship's speed
     private final int MIN_SPEED = 1;
     private final int MAX_SPEED = 20;
+
+    private Rect detectCollision;
 
     Card()
     {
@@ -89,6 +91,8 @@ public class Card
         minY = 0;
 
         boosting = false;
+
+        detectCollision = new Rect(mCurrX, mCurrY, mFace.getWidth(), mFace.getHeight());
     }
 
 
@@ -300,6 +304,11 @@ public class Card
 
             mCurrY = maxY;
         }
+
+        detectCollision.left = mCurrX;
+        detectCollision.top = mCurrY;
+        detectCollision.right = mCurrX + mFace.getWidth();
+        detectCollision.bottom = mCurrY + mFace.getHeight();
     }
 
     // get current speed
@@ -316,6 +325,11 @@ public class Card
     //setting boosting false
     public void stopBoosting() {
         boosting = false;
+    }
+
+    public Rect getDetectCollision()
+    {
+        return detectCollision;
     }
 
 }

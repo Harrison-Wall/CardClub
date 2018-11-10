@@ -31,8 +31,8 @@ public class EnemyCard
         x = pX;
         y = generator.nextInt(maxY) - bmap.getHeight();
 
-        //Set up detection git box
-        DetectCollision = new Rect(x, y, bmap.getHeight(), bmap.getWidth());
+        //Set up detection hit box
+        DetectCollision = new Rect(x, y, bmap.getWidth(), bmap.getHeight());
 
     }
 
@@ -52,6 +52,22 @@ public class EnemyCard
             x = maxX;
             y = generator.nextInt(maxY) - bmap.getHeight();
         }
+
+        // move the hit box to the EnemyCard
+        DetectCollision.left = x;
+        DetectCollision.top = y;
+        DetectCollision.right = x + bmap.getWidth();
+        DetectCollision.bottom = y + bmap.getHeight();
+    }
+
+    public void setX(int pX)
+    {
+        x = pX;
+    }
+
+    public Rect getDetectCollision()
+    {
+        return DetectCollision;
     }
 
     public Bitmap getBmap()
