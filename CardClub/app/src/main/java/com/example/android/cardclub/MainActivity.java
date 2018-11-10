@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity
         //Create list of games
         final ArrayList<GameInfo> games = new ArrayList<GameInfo>();
         games.add(new GameInfo(0, "Solitaire"));
-
-        // TODO: Add more games
+        games.add(new GameInfo(1, "BlackJack"));
+        games.add(new GameInfo(2, "War"));
 
         //set the adapter
         GameInfoAdapter myAdapter = new GameInfoAdapter(this, games);
@@ -56,6 +56,12 @@ public class MainActivity extends AppCompatActivity
         {
             case 0:
                 gameIntent = new Intent(MainActivity.this, Solitaire.class); // Solitaire
+                break;
+            case 1:
+                gameIntent = new Intent(MainActivity.this, BlackJack.class); // Solitaire
+                break;
+            case 2:
+                gameIntent = new Intent(MainActivity.this, War.class); // Solitaire
                 break;
         }
 
