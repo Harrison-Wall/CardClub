@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.example.android.cardclub.testClasses.EnemyCard;
+
 public class GameView extends SurfaceView implements Runnable
 {
     //boolean variable to track if the game is playing or not

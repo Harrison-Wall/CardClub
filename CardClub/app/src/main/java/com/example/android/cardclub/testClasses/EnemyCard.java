@@ -1,9 +1,11 @@
-package com.example.android.cardclub;
+package com.example.android.cardclub.testClasses;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+
+import com.example.android.cardclub.R;
 
 import java.util.Random;
 

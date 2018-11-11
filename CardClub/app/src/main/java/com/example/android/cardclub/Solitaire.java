@@ -23,7 +23,6 @@ public class Solitaire extends Activity
         display.getSize(size);
 
         //Initializing game view object
-        //this time we are also passing the screen size to the GameView constructor
         gameView = new GameView(this, size.x, size.y);
 
         //adding it to contentview
