@@ -13,14 +13,11 @@ public class Card
     private boolean mfaceUp;
 
     // Info for drawing
-    private int mCurrX, mCurrY, mOldX, mOldY, mHieght, mWidth;
+    private int mCurrX, mCurrY, mOldX, mOldY;
     private int mresID;
     private Bitmap mFace;
 
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
-
-    //Controlling coordinates so that ship won't go outside the screen
-    private int mMaxY, mMinY, mMaxX, mMinX;
 
     private Rect detectCollision;
 
@@ -44,8 +41,23 @@ public class Card
         iCounter++;
     }
 
-    // specific card with display data
-    Card(int pValue, int pSuit, boolean pFace, int pX, int pY, int pHeight, int pWidth, Context context)
+    // Specific card with some display data
+    Card(int pValue, int pSuit, boolean pFace, int pX, int pY)
+    {
+        mID = iCounter;
+        miValue = pValue;
+        miSuit = pSuit;
+        mfaceUp = pFace;
+
+        mCurrX = pX;
+        mCurrY = pY;
+        detectCollision = new Rect(mCurrX, mCurrY, mFace.getWidth(), mFace.getHeight());
+
+        iCounter++;
+    }
+
+    // specific card with full display data
+    Card(int pValue, int pSuit, boolean pFace, int pX, int pY, int prID, Context context)
     {
         mID = iCounter;
         miValue = pValue;
@@ -53,16 +65,10 @@ public class Card
         mfaceUp = pFace;
 
         // Set display
-        mresID = R.drawable.blue_back;
+        mresID = prID;
         setFaceMap(context);
-
         mCurrX = pX;
         mCurrY = pY;
-        mHieght = pHeight;
-        mWidth = pWidth;
-        mMaxY = pY - mFace.getHeight();
-        mMaxX = 0;
-
         detectCollision = new Rect(mCurrX, mCurrY, mFace.getWidth(), mFace.getHeight());
 
         iCounter++;
@@ -105,13 +111,6 @@ public class Card
     public void setValue(int pValue)
     {
         miValue = pValue;
-    }
-
-    public void setHieght(int pHiehgt) { mHieght = pHiehgt; }
-
-    public void setWidth(int pWidth)
-    {
-        mWidth = pWidth;
     }
 
     // Getters
@@ -161,16 +160,6 @@ public class Card
         return mOldY;
     }
 
-    public int getHieght()
-    {
-        return mHieght;
-    }
-
-    public int getWidth()
-    {
-        return mWidth;
-    }
-
     public Bitmap getFaceMap()
     {
         return mFace;
@@ -183,23 +172,9 @@ public class Card
 
     public int getResID() { return mresID; }
 
-
-    /*********TEMPORARY WHILE LEARNING THIS SHIT*********/
-    //Method to update coordinate of character
+    //Method to update card
     public void update()
     {
-
-        //but controlling it also so that it won't go off the screen
-        if (mCurrY < mMinY)
-        {
-            mCurrY = mMinY;
-        }
-
-        if (mCurrY > mMaxY)
-        {
-
-            mCurrY = mMaxY;
-        }
 
         detectCollision.left = mCurrX;
         detectCollision.top = mCurrY;

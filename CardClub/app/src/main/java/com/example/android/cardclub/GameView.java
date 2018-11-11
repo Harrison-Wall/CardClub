@@ -39,7 +39,7 @@ public class GameView extends SurfaceView implements Runnable
         super(context);
 
         // Set up the card
-        c1 = new Card(1, 1, false, ScreenX/2, ScreenY/2, 100, 50, context);
+        c1 = new Card(1, 1, false, ScreenX/2, ScreenY/2, R.drawable.c_2 , context);
 
         /*enemies = new EnemyCard[3];
         enemies[0] = new EnemyCard(context, ScreenX, ScreenY);
