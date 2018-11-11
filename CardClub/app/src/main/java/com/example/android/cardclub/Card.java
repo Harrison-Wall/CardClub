@@ -81,7 +81,7 @@ public class Card
 
     // Setters
 
-    public void setmCurrX(int pX)
+    public void setCurrX(int pX)
     {
         mOldX = mCurrX;
         mCurrX = pX;

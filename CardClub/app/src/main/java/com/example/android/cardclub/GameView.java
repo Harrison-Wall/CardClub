@@ -7,12 +7,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.android.cardclub.testClasses.EnemyCard;
 
 public class GameView extends SurfaceView implements Runnable
 {
@@ -25,9 +24,6 @@ public class GameView extends SurfaceView implements Runnable
     // Card to draw
     private Card c1;
 
-    // Enemy Card
-    //private EnemyCard[] enemies;
-
     // Used for drawing
     private Paint paint;
     private Canvas canvas;
@@ -39,12 +35,7 @@ public class GameView extends SurfaceView implements Runnable
         super(context);
 
         // Set up the card
-        c1 = new Card(1, 1, false, ScreenX/2, ScreenY/2, R.drawable.c_2 , context);
-
-        /*enemies = new EnemyCard[3];
-        enemies[0] = new EnemyCard(context, ScreenX, ScreenY);
-        enemies[1] = new EnemyCard(context, ScreenX, ScreenY);
-        enemies[2] = new EnemyCard(context, ScreenX, ScreenY);*/
+        c1 = new Card(1, 1, false, ScreenX/4, ScreenY/4, R.drawable.c_2 , context);
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -72,24 +63,12 @@ public class GameView extends SurfaceView implements Runnable
         //updating player position
         c1.update();
 
-        //update enemy position
-        //enemies[0].update((c1.getSpeed()));
-        //enemies[1].update((c1.getSpeed()));
-        //enemies[2].update((c1.getSpeed()));
-
         //Detect collisions
         /*if(Rect.intersects(c1.getDetectCollision(), enemies[0].getDetectCollision() ) )
         {
             enemies[0].setX(-200);
         }
-        if(Rect.intersects(c1.getDetectCollision(), enemies[1].getDetectCollision() ) )
-        {
-            enemies[1].setX(-200);
-        }
-        if(Rect.intersects(c1.getDetectCollision(), enemies[2].getDetectCollision() ) )
-        {
-            enemies[2].setX(-200);
-        }*/
+        */
     }
 
     private void draw()
@@ -99,19 +78,13 @@ public class GameView extends SurfaceView implements Runnable
         {
             //locking the canvas
             canvas = sHolder.lockCanvas();
-            //drawing a background color for canvas
-            canvas.drawColor(Color.BLUE);
-            //Drawing the player
+            canvas.drawColor(Color.rgb(25,200,50));
 
             if( c1.isFaceUp() )
                 canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
             else
                 canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
 
-            //Draw enemies
-            //canvas.drawBitmap(enemies[0].getBmap(), enemies[0].getX(), enemies[0].getY(), paint);
-            //canvas.drawBitmap(enemies[1].getBmap(), enemies[1].getX(), enemies[1].getY(), paint);
-            //canvas.drawBitmap(enemies[2].getBmap(), enemies[2].getX(), enemies[2].getY(), paint);
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -155,6 +128,7 @@ public class GameView extends SurfaceView implements Runnable
     }
 
 
+    private Point userCollisionDetection;
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent)
@@ -163,11 +137,26 @@ public class GameView extends SurfaceView implements Runnable
         {
             case MotionEvent.ACTION_UP:
                 //When the user presses on the screen
+                userCollisionDetection = new Point((int)motionEvent.getX(), (int)motionEvent.getY() );
+
+                if( c1.getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) ) // If the user touches a card
+                {
+                    c1.turnUp();
+                }
+
+                draw();
+
                 break;
             case MotionEvent.ACTION_DOWN:
                 //When the user releases the screen
                 break;
+            case MotionEvent.ACTION_MOVE:
+                // When user drags across screen
+                break;
         }
+
+
+
         return true;
     }
 
