@@ -26,7 +26,7 @@ public class GameView extends SurfaceView implements Runnable
     private Card c1;
 
     // Enemy Card
-    private EnemyCard[] enemies;
+    //private EnemyCard[] enemies;
 
     // Used for drawing
     private Paint paint;
@@ -39,12 +39,12 @@ public class GameView extends SurfaceView implements Runnable
         super(context);
 
         // Set up the card
-        c1 = new Card(context, ScreenX, ScreenY);
+        c1 = new Card(1, 1, false, ScreenX/2, ScreenY/2, 100, 50, context);
 
-        enemies = new EnemyCard[3];
+        /*enemies = new EnemyCard[3];
         enemies[0] = new EnemyCard(context, ScreenX, ScreenY);
         enemies[1] = new EnemyCard(context, ScreenX, ScreenY);
-        enemies[2] = new EnemyCard(context, ScreenX, ScreenY);
+        enemies[2] = new EnemyCard(context, ScreenX, ScreenY);*/
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -73,12 +73,12 @@ public class GameView extends SurfaceView implements Runnable
         c1.update();
 
         //update enemy position
-        enemies[0].update((c1.getSpeed()));
-        enemies[1].update((c1.getSpeed()));
-        enemies[2].update((c1.getSpeed()));
+        //enemies[0].update((c1.getSpeed()));
+        //enemies[1].update((c1.getSpeed()));
+        //enemies[2].update((c1.getSpeed()));
 
         //Detect collisions
-        if(Rect.intersects(c1.getDetectCollision(), enemies[0].getDetectCollision() ) )
+        /*if(Rect.intersects(c1.getDetectCollision(), enemies[0].getDetectCollision() ) )
         {
             enemies[0].setX(-200);
         }
@@ -89,7 +89,7 @@ public class GameView extends SurfaceView implements Runnable
         if(Rect.intersects(c1.getDetectCollision(), enemies[2].getDetectCollision() ) )
         {
             enemies[2].setX(-200);
-        }
+        }*/
     }
 
     private void draw()
@@ -105,9 +105,9 @@ public class GameView extends SurfaceView implements Runnable
             canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
 
             //Draw enemies
-            canvas.drawBitmap(enemies[0].getBmap(), enemies[0].getX(), enemies[0].getY(), paint);
-            canvas.drawBitmap(enemies[1].getBmap(), enemies[1].getX(), enemies[1].getY(), paint);
-            canvas.drawBitmap(enemies[2].getBmap(), enemies[2].getX(), enemies[2].getY(), paint);
+            //canvas.drawBitmap(enemies[0].getBmap(), enemies[0].getX(), enemies[0].getY(), paint);
+            //canvas.drawBitmap(enemies[1].getBmap(), enemies[1].getX(), enemies[1].getY(), paint);
+            //canvas.drawBitmap(enemies[2].getBmap(), enemies[2].getX(), enemies[2].getY(), paint);
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -128,9 +128,9 @@ public class GameView extends SurfaceView implements Runnable
 
     public void pause()
     {
-        //when the game is paused
         //setting the variable to false
         playing = false;
+
         try
         {
             //stopping the thread
@@ -144,7 +144,6 @@ public class GameView extends SurfaceView implements Runnable
 
     public void resume()
     {
-        //when the game is resumed
         //starting the thread again
         playing = true;
         gameThread = new Thread(this);
@@ -160,11 +159,11 @@ public class GameView extends SurfaceView implements Runnable
         {
             case MotionEvent.ACTION_UP:
                 //When the user presses on the screen
-                c1.stopBoosting();
+                //c1.stopBoosting();
                 break;
             case MotionEvent.ACTION_DOWN:
                 //When the user releases the screen
-                c1.setBoosting();
+                //c1.setBoosting();
                 break;
         }
         return true;
