@@ -102,7 +102,11 @@ public class GameView extends SurfaceView implements Runnable
             //drawing a background color for canvas
             canvas.drawColor(Color.BLUE);
             //Drawing the player
-            canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
+
+            if( c1.isFaceUp() )
+                canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
+            else
+                canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
 
             //Draw enemies
             //canvas.drawBitmap(enemies[0].getBmap(), enemies[0].getX(), enemies[0].getY(), paint);
@@ -159,11 +163,9 @@ public class GameView extends SurfaceView implements Runnable
         {
             case MotionEvent.ACTION_UP:
                 //When the user presses on the screen
-                //c1.stopBoosting();
                 break;
             case MotionEvent.ACTION_DOWN:
                 //When the user releases the screen
-                //c1.setBoosting();
                 break;
         }
         return true;

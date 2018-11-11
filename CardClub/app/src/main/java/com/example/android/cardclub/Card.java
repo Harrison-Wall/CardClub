@@ -14,8 +14,8 @@ public class Card
 
     // Info for drawing
     private int mCurrX, mCurrY, mOldX, mOldY;
-    private int mresID;
-    private Bitmap mFace;
+    private int mfaceID, mbackID;
+    private Bitmap mFaceMap, mBackMap;
 
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
 
@@ -48,10 +48,11 @@ public class Card
         miValue = pValue;
         miSuit = pSuit;
         mfaceUp = pFace;
+        mbackID = R.drawable.blue_back;
 
         mCurrX = pX;
         mCurrY = pY;
-        detectCollision = new Rect(mCurrX, mCurrY, mFace.getWidth(), mFace.getHeight());
+        detectCollision = new Rect(mCurrX, mCurrY, mFaceMap.getWidth(), mFaceMap.getHeight());
 
         iCounter++;
     }
@@ -65,11 +66,15 @@ public class Card
         mfaceUp = pFace;
 
         // Set display
-        mresID = prID;
+        mbackID = R.drawable.blue_back;
+        mfaceID = prID;
+
         setFaceMap(context);
+        setBackMap(context);
+
         mCurrX = pX;
         mCurrY = pY;
-        detectCollision = new Rect(mCurrX, mCurrY, mFace.getWidth(), mFace.getHeight());
+        detectCollision = new Rect(mCurrX, mCurrY, mFaceMap.getWidth(), mFaceMap.getHeight());
 
         iCounter++;
     }
@@ -88,9 +93,10 @@ public class Card
         mCurrY = pY;
     }
 
-    public void setResID(int pID) { mresID = pID; }
 
-    public void setFaceMap(Context context) { mFace = BitmapFactory.decodeResource(context.getResources(), mresID); }
+    public void setFaceMap(Context context) { mFaceMap = BitmapFactory.decodeResource(context.getResources(), mfaceID); }
+
+    public void setBackMap(Context context) { mBackMap = BitmapFactory.decodeResource(context.getResources(), mbackID); }
 
     public void turnUp() { mfaceUp = true; }
 
@@ -160,17 +166,14 @@ public class Card
         return mOldY;
     }
 
-    public Bitmap getFaceMap()
-    {
-        return mFace;
-    }
+    public Bitmap getFaceMap() { return mFaceMap; }
+
+    public Bitmap getBackMap() { return mBackMap; }
 
     public Rect getDetectCollision()
     {
         return detectCollision;
     }
-
-    public int getResID() { return mresID; }
 
     //Method to update card
     public void update()
@@ -178,8 +181,8 @@ public class Card
 
         detectCollision.left = mCurrX;
         detectCollision.top = mCurrY;
-        detectCollision.right = mCurrX + mFace.getWidth();
-        detectCollision.bottom = mCurrY + mFace.getHeight();
+        detectCollision.right = mCurrX + mFaceMap.getWidth();
+        detectCollision.bottom = mCurrY + mFaceMap.getHeight();
     }
 
 }
