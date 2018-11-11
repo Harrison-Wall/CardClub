@@ -16,6 +16,7 @@ public class Card
     private int mCurrX, mCurrY, mOldX, mOldY;
     private int mfaceID, mbackID;
     private Bitmap mFaceMap, mBackMap;
+    BitmapFactory.Options mOps;
 
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
 
@@ -41,22 +42,6 @@ public class Card
         iCounter++;
     }
 
-    // Specific card with some display data
-    Card(int pValue, int pSuit, boolean pFace, int pX, int pY)
-    {
-        mID = iCounter;
-        miValue = pValue;
-        miSuit = pSuit;
-        mfaceUp = pFace;
-        mbackID = R.drawable.blue_back;
-
-        mCurrX = pX;
-        mCurrY = pY;
-        detectCollision = new Rect(mCurrX, mCurrY, mFaceMap.getWidth(), mFaceMap.getHeight());
-
-        iCounter++;
-    }
-
     // specific card with full display data
     Card(int pValue, int pSuit, boolean pFace, int pX, int pY, int prID, Context context)
     {
@@ -68,6 +53,9 @@ public class Card
         // Set display
         mbackID = R.drawable.blue_back;
         mfaceID = prID;
+
+        mOps = new BitmapFactory.Options();
+        mOps.inDensity = 1300;
 
         setFaceMap(context);
         setBackMap(context);
@@ -93,10 +81,15 @@ public class Card
         mCurrY = pY;
     }
 
+    public void setFaceMap(Context context)
+    {
+        mFaceMap = BitmapFactory.decodeResource(context.getResources(), mfaceID, mOps);
+    }
 
-    public void setFaceMap(Context context) { mFaceMap = BitmapFactory.decodeResource(context.getResources(), mfaceID); }
-
-    public void setBackMap(Context context) { mBackMap = BitmapFactory.decodeResource(context.getResources(), mbackID); }
+    public void setBackMap(Context context)
+    {
+        mBackMap = BitmapFactory.decodeResource(context.getResources(), mbackID, mOps);
+    }
 
     public void turnUp() { mfaceUp = true; }
 
