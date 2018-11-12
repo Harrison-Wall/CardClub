@@ -29,6 +29,8 @@ public class CardStack
     {
         pCard.setCurrX( mX );
         pCard.setCurrY( mY + mOffset); // Next Card should be below the previous
+        pCard.update(); // Update hit box
+
         mCardStack.push(pCard);
 
         mOffset += 50;

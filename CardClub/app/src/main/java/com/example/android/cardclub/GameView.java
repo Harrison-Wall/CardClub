@@ -1,6 +1,5 @@
 package com.example.android.cardclub;
 
-// Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
 // Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
 
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -30,8 +28,6 @@ public class GameView extends SurfaceView implements Runnable
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder sHolder;
-
-    private Color bGround;
 
     // Used for moving cards
     private Card activeCard;
@@ -199,6 +195,8 @@ public class GameView extends SurfaceView implements Runnable
 
     public void addReources(int array[])
     {
+        // Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
+
         // Clubs
         array[0] = R.drawable.c_a;
         array[1] = R.drawable.c_2;
