@@ -22,7 +22,7 @@ public class GameView extends SurfaceView implements Runnable
     private Thread gameThread = null;
 
     // Card to draw
-    private Card c1, c2;
+    //private Card c1, c2;
 
     // Used for drawing
     private Paint paint;
@@ -35,8 +35,8 @@ public class GameView extends SurfaceView implements Runnable
         super(context);
 
         // Set up the card
-        c1 = new Card(1, 1, false, ScreenX/4, ScreenY/4, R.drawable.c_2 , context);
-        c2 = new Card(1, 1, false, ScreenX/4+500, ScreenY/4, R.drawable.h_a , context);
+        //c1 = new Card(1, 1, false, ScreenX/4, ScreenY/4, R.drawable.c_2 , context);
+        //c2 = new Card(1, 1, false, ScreenX/4+500, ScreenY/4, R.drawable.h_a , context);
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -62,15 +62,8 @@ public class GameView extends SurfaceView implements Runnable
     private void update()
     {
         //updating player position
-        c1.update();
-        c2.update();
-
-        //Detect collisions
-        /*if(Rect.intersects(c1.getDetectCollision(), enemies[0].getDetectCollision() ) )
-        {
-            enemies[0].setX(-200);
-        }
-        */
+        //c1.update();
+        //c2.update();
     }
 
     private void draw()
@@ -84,7 +77,7 @@ public class GameView extends SurfaceView implements Runnable
 
             if( activeCard == null )
             {
-                if( c1.isFaceUp() )
+                /*if( c1.isFaceUp() )
                     canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
                 else
                     canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
@@ -92,13 +85,13 @@ public class GameView extends SurfaceView implements Runnable
                 if( c2.isFaceUp() )
                     canvas.drawBitmap(c2.getFaceMap(), c2.getCurrX(), c2.getCurrY(), paint);
                 else
-                    canvas.drawBitmap(c2.getBackMap(), c2.getCurrX(), c2.getCurrY(), paint);
+                    canvas.drawBitmap(c2.getBackMap(), c2.getCurrX(), c2.getCurrY(), paint);*/
             }
             else
             {
                 canvas.drawBitmap(activeCard.getFaceMap(), activeCard.getCurrX(), activeCard.getCurrY(), paint);
 
-                if( activeCard.getID() == c1.getID() )
+                /*if( activeCard.getID() == c1.getID() )
                 {
                     if( c2.isFaceUp() )
                         canvas.drawBitmap(c2.getFaceMap(), c2.getCurrX(), c2.getCurrY(), paint);
@@ -111,7 +104,7 @@ public class GameView extends SurfaceView implements Runnable
                         canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
                     else
                         canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
-                }
+                }*/
             }
 
             //Unlocking the canvas
@@ -171,7 +164,7 @@ public class GameView extends SurfaceView implements Runnable
                 break;
             case MotionEvent.ACTION_DOWN:
                 userCollisionDetection = new Point((int)motionEvent.getX(), (int)motionEvent.getY() );
-                if( c1.getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) ) // If the user touches a card
+                /*if( c1.getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) ) // If the user touches a card
                 {
                     c1.turnUp();
                     activeCard = c1;
@@ -180,7 +173,7 @@ public class GameView extends SurfaceView implements Runnable
                 {
                     c2.turnUp();
                     activeCard = c2;
-                }
+                }*/
 
                 break;
             case MotionEvent.ACTION_MOVE:
