@@ -16,7 +16,7 @@ public class Card
     private int mCurrX, mCurrY;
     private int mfaceID, mbackID;
     private Bitmap mFaceMap, mBackMap;
-    BitmapFactory.Options mOps;
+    private BitmapFactory.Options mOps;
 
     private static int iCounter = 1;    //Used to keep track of Cards - My USE ONLY
 
@@ -69,16 +69,6 @@ public class Card
 
     // Setters
 
-    public void setCurrX(int pX)
-    {
-        mCurrX = pX;
-    }
-
-    public void setCurrY(int pY)
-    {
-        mCurrY = pY;
-    }
-
     public void setFaceMap(Context context)
     {
         mFaceMap = BitmapFactory.decodeResource(context.getResources(), mfaceID, mOps);
@@ -88,6 +78,10 @@ public class Card
     {
         mBackMap = BitmapFactory.decodeResource(context.getResources(), mbackID, mOps);
     }
+
+    public void setCurrX(int pX) { mCurrX = pX; }
+
+    public void setCurrY(int pY) { mCurrY = pY; }
 
     public void turnUp() { mfaceUp = true; }
 
@@ -111,7 +105,6 @@ public class Card
     }
 
     // Getters
-
     public boolean isRed()
     {
         return (miSuit == 1 || miSuit == 2);
@@ -146,7 +139,6 @@ public class Card
     {
         return mCurrY;
     }
-
 
     public Bitmap getFaceMap() { return mFaceMap; }
 

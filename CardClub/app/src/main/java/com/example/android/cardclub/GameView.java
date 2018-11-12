@@ -48,10 +48,12 @@ public class GameView extends SurfaceView implements Runnable
         mDeck = new Deck(context, mRedourceIDArray); // Create the Deck of Cards
         mDeck.shuffleDeck();
 
-        mCStack = new CardStack(0,0,0); // Create a Stack of Cards
+        mCStack = new CardStack(0,ScreenX/4,ScreenY/4); // Create a Stack of Cards
 
         mCStack.addCard( mDeck.getCard(0) );
         mCStack.addCard( mDeck.getCard(1) );
+        mCStack.addCard( mDeck.getCard(3) );
+        mCStack.addCard( mDeck.getCard(4) );
 
         // Set up paint. surface etc
         sHolder = getHolder();
