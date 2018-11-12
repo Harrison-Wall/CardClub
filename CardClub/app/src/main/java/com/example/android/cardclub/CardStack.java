@@ -7,7 +7,7 @@ public class CardStack
     private int mID, mOffset, mX, mY;
     private Stack<Card> mCardStack;
 
-    public void CarsStack()
+    public CardStack()
     {
         mID = 0;
         mOffset = 50;
@@ -16,7 +16,7 @@ public class CardStack
         mCardStack = new Stack<Card>( );
     }
 
-    public void CarsStack(int pID, int pX, int pY)
+    public CardStack(int pID, int pX, int pY)
     {
         mID = pID;
         mOffset = 50;

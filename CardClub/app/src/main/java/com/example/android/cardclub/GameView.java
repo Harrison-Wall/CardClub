@@ -13,8 +13,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.Stack;
-
 
 public class GameView extends SurfaceView implements Runnable
 {
@@ -44,20 +42,11 @@ public class GameView extends SurfaceView implements Runnable
         mDeck = new Deck(context, mRedourceIDArray); // Create the Deck of Cards
         //mDeck.shuffleDeck();
 
-        mCStack = new CardStack();
+        mCStack = new CardStack(0,0,0);
         mCStack.setX(ScreenX/4);
         mCStack.setY(ScreenY/4);
 
-        Log.v("GameView()","Created Deck, Card Stack");
-
-        // Add a few Cards to the stack
-        mCStack.addCard( mDeck.getCard(3) );
-
-        Log.v("GameView()","Added 1 Card to Stack");
-
-        //mCStack.addCard( mDeck.getCard(1) );
-
-        //Log.v("GameView()","Added Cards to Stack");
+        mCStack.addCard( mDeck.getCard(0) );
 
         // Set up paint. surface etc
         sHolder = getHolder();
