@@ -22,7 +22,7 @@ public class GameView extends SurfaceView implements Runnable
     private Thread gameThread = null;
 
     // Card to draw
-    private Card c1;
+    private Card c1, c2;
 
     // Used for drawing
     private Paint paint;
@@ -36,6 +36,7 @@ public class GameView extends SurfaceView implements Runnable
 
         // Set up the card
         c1 = new Card(1, 1, false, ScreenX/4, ScreenY/4, R.drawable.c_2 , context);
+        c2 = new Card(1, 1, false, ScreenX/4+500, ScreenY/4, R.drawable.h_a , context);
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -62,6 +63,7 @@ public class GameView extends SurfaceView implements Runnable
     {
         //updating player position
         c1.update();
+        c2.update();
 
         //Detect collisions
         /*if(Rect.intersects(c1.getDetectCollision(), enemies[0].getDetectCollision() ) )
@@ -80,11 +82,37 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            if( c1.isFaceUp() )
-                canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
-            else
-                canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
+            if( activeCard == null )
+            {
+                if( c1.isFaceUp() )
+                    canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
+                else
+                    canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
 
+                if( c2.isFaceUp() )
+                    canvas.drawBitmap(c2.getFaceMap(), c2.getCurrX(), c2.getCurrY(), paint);
+                else
+                    canvas.drawBitmap(c2.getBackMap(), c2.getCurrX(), c2.getCurrY(), paint);
+            }
+            else
+            {
+                canvas.drawBitmap(activeCard.getFaceMap(), activeCard.getCurrX(), activeCard.getCurrY(), paint);
+
+                if( activeCard.getID() == c1.getID() )
+                {
+                    if( c2.isFaceUp() )
+                        canvas.drawBitmap(c2.getFaceMap(), c2.getCurrX(), c2.getCurrY(), paint);
+                    else
+                        canvas.drawBitmap(c2.getBackMap(), c2.getCurrX(), c2.getCurrY(), paint);
+                }
+                else
+                {
+                    if( c1.isFaceUp() )
+                        canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
+                    else
+                        canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
+                }
+            }
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -129,6 +157,8 @@ public class GameView extends SurfaceView implements Runnable
 
 
     private Point userCollisionDetection;
+    private Card activeCard;
+    int x, y;
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent)
@@ -136,26 +166,38 @@ public class GameView extends SurfaceView implements Runnable
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
         {
             case MotionEvent.ACTION_UP:
-                //When the user presses on the screen
+                activeCard = null;
+                draw();
+                break;
+            case MotionEvent.ACTION_DOWN:
                 userCollisionDetection = new Point((int)motionEvent.getX(), (int)motionEvent.getY() );
-
                 if( c1.getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) ) // If the user touches a card
                 {
                     c1.turnUp();
+                    activeCard = c1;
+                }
+                else if( c2.getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) ) // If the user touches a card
+                {
+                    c2.turnUp();
+                    activeCard = c2;
                 }
 
-                draw();
-
-                break;
-            case MotionEvent.ACTION_DOWN:
-                //When the user releases the screen
                 break;
             case MotionEvent.ACTION_MOVE:
                 // When user drags across screen
+                x = (int)motionEvent.getX();
+                y = (int)motionEvent.getY();
+
+                if( activeCard != null )
+                {
+                    activeCard.setCurrX(x);
+                    activeCard.setCurrY(y);
+
+                    draw();
+                }
+
                 break;
         }
-
-
 
         return true;
     }
