@@ -1,5 +1,7 @@
 package com.example.android.cardclub;
 
+import android.content.Context;
+
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -30,6 +32,15 @@ public class Deck
         }
     }
 
+    // Deck with display data in the cards
+    Deck(Context context, int resArray[])
+    {
+        for ( int i = 0; i < deckSize; i++ )
+        {
+            deckOfCards.add(new Card( ((i%13)+1), (i/13), false, 0, 0, resArray[i], context ));
+        }
+    }
+
     /**
      * Returns a Card at a specified location.
      * @param pIndex (int)
@@ -39,6 +50,8 @@ public class Deck
     {
         return deckOfCards.get(pIndex);
     }
+
+    public int getSize () {return deckSize;}
 
     /**
      * Randomly Shuffles the Deck

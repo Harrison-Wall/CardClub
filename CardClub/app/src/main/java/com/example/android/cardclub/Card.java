@@ -8,8 +8,8 @@ import android.graphics.Rect;
 public class Card
 {
     private int mID;                     //1-52
-    private int miValue;                 //1-13
-    private int miSuit;                  //0-3
+    private int miValue;                 //1-13 Ace->King
+    private int miSuit;                  //0-3  Clubs, Diamonds, Hearts, Spades
     private boolean mfaceUp;
 
     // Info for drawing
