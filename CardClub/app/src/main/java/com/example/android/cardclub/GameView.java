@@ -8,9 +8,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.util.Stack;
 
 
 public class GameView extends SurfaceView implements Runnable
@@ -21,10 +24,7 @@ public class GameView extends SurfaceView implements Runnable
     //the game thread
     private Thread gameThread = null;
 
-    // Card to draw
-    //private Card c1, c2;
-
-    private int[] mRedourceIDArray = new int[52];
+    private int[] mRedourceIDArray;
     private Deck mDeck;
     private CardStack mCStack;
 
@@ -38,7 +38,9 @@ public class GameView extends SurfaceView implements Runnable
     {
         super(context);
 
+        mRedourceIDArray = new int[52];
         addReources(mRedourceIDArray); // Add Bitmap resource IDs
+
         mDeck = new Deck(context, mRedourceIDArray); // Create the Deck of Cards
         //mDeck.shuffleDeck();
 
@@ -46,15 +48,16 @@ public class GameView extends SurfaceView implements Runnable
         mCStack.setX(ScreenX/4);
         mCStack.setY(ScreenY/4);
 
+        Log.v("GameView()","Created Deck, Card Stack");
+
         // Add a few Cards to the stack
-        mCStack.addCard( mDeck.getCard(0) );
-        mCStack.addCard( mDeck.getCard(1) );
+        mCStack.addCard( mDeck.getCard(3) );
 
-        /*c1 = mDeck.getCard(35);
-        c2 = mDeck.getCard(51);
+        Log.v("GameView()","Added 1 Card to Stack");
 
-        c1.setCurrX(ScreenX/4);
-        c1.setCurrY(ScreenY/4);*/
+        //mCStack.addCard( mDeck.getCard(1) );
+
+        //Log.v("GameView()","Added Cards to Stack");
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -79,13 +82,11 @@ public class GameView extends SurfaceView implements Runnable
 
     private void update()
     {
-        //updating player position
-        //c1.update();
-        //c2.update();
-        for( int i = 0; i <  mCStack.getSize(); i++ )
-        {
-            mCStack.getAt(i).update();
-        }
+        //updating card position + hit box
+        if(activeCard != null)
+            activeCard.update();
+
+        Log.v("Update()","Called Successfull");
     }
 
     private void draw()
@@ -97,25 +98,7 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            /*if( activeCard == null )
-            {
-                drawCard(c1);
-
-                drawCard(c2);
-            }
-            else
-            {
-                drawCard(activeCard);
-
-                if( activeCard.getID() == c1.getID() )
-                {
-                    drawCard(c2);
-                }
-                else
-                {
-                    drawCard(c1);
-                }
-            }*/
+            Log.v("Draw()","Colored Background");
 
             if( activeCard == null )
             {
@@ -134,6 +117,8 @@ public class GameView extends SurfaceView implements Runnable
                         drawCard(mCStack.getAt(i));
                 }
             }
+
+            Log.v("Draw()","Drawn Cards");
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -192,22 +177,16 @@ public class GameView extends SurfaceView implements Runnable
                 break;
             case MotionEvent.ACTION_DOWN:
                 userCollisionDetection = new Point((int)motionEvent.getX(), (int)motionEvent.getY() );
-                /*if( c1.getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) ) // If the user touches a card
-                {
-                    c1.turnUp();
-                    activeCard = c1;
-                }
-                else if( c2.getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) ) // If the user touches a card
-                {
-                    c2.turnUp();
-                    activeCard = c2;
-                }*/
 
-                if( mCStack.getTop().getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y ) )
+                Log.v("onTouch()","Pressed");
+
+                if( mCStack.getTop().getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) )
                 {
                     mCStack.getTop().turnUp();
                     activeCard = mCStack.getTop();
                 }
+
+                Log.v("onTouch()","Got Active Card");
 
                 break;
             case MotionEvent.ACTION_MOVE:

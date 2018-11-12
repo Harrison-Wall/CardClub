@@ -13,16 +13,16 @@ public class CardStack
         mOffset = 50;
         mX = 0;
         mY = 0;
-        mCardStack = new Stack<Card>();
+        mCardStack = new Stack<Card>( );
     }
 
-    public void CarsStack(int pID)
+    public void CarsStack(int pID, int pX, int pY)
     {
         mID = pID;
         mOffset = 50;
-        mX = 0;
-        mY = 0;
-        mCardStack = new Stack<Card>();
+        mX = pX;
+        mY = pY;
+        mCardStack = new Stack<Card>( );
     }
 
     public void addCard(Card pCard)
