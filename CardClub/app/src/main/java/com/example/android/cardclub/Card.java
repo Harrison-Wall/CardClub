@@ -13,7 +13,7 @@ public class Card
     private boolean mfaceUp;
 
     // Info for drawing
-    private int mCurrX, mCurrY, mOldX, mOldY;
+    private int mCurrX, mCurrY;
     private int mfaceID, mbackID;
     private Bitmap mFaceMap, mBackMap;
     BitmapFactory.Options mOps;
@@ -71,13 +71,11 @@ public class Card
 
     public void setCurrX(int pX)
     {
-        mOldX = mCurrX;
         mCurrX = pX;
     }
 
     public void setCurrY(int pY)
     {
-        mOldY = mCurrY;
         mCurrY = pY;
     }
 
@@ -149,15 +147,6 @@ public class Card
         return mCurrY;
     }
 
-    public int getOldX()
-    {
-        return mOldX;
-    }
-
-    public int getOldY()
-    {
-        return mOldY;
-    }
 
     public Bitmap getFaceMap() { return mFaceMap; }
 
@@ -171,7 +160,6 @@ public class Card
     //Method to update card
     public void update()
     {
-
         detectCollision.left = mCurrX;
         detectCollision.top = mCurrY;
         detectCollision.right = mCurrX + mFaceMap.getWidth();

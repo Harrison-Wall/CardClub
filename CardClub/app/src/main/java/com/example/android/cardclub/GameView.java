@@ -22,14 +22,20 @@ public class GameView extends SurfaceView implements Runnable
     //the game thread
     private Thread gameThread = null;
 
-    private int[] mRedourceIDArray;
-    private Deck mDeck;
-    private CardStack mCStack;
+    private int[] mRedourceIDArray; // Resource IDs of Card images
+    private Deck mDeck;             // Array list of Cards
+    private CardStack mCStack;      // Stack of cards
 
     // Used for drawing
     private Paint paint;
     private Canvas canvas;
     private SurfaceHolder sHolder;
+
+    private Color bGround;
+
+    // Used for moving cards
+    private Card activeCard;
+    int x, y;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
@@ -40,13 +46,12 @@ public class GameView extends SurfaceView implements Runnable
         addReources(mRedourceIDArray); // Add Bitmap resource IDs
 
         mDeck = new Deck(context, mRedourceIDArray); // Create the Deck of Cards
-        //mDeck.shuffleDeck();
+        mDeck.shuffleDeck();
 
-        mCStack = new CardStack(0,0,0);
-        mCStack.setX(ScreenX/4);
-        mCStack.setY(ScreenY/4);
+        mCStack = new CardStack(0,0,0); // Create a Stack of Cards
 
         mCStack.addCard( mDeck.getCard(0) );
+        mCStack.addCard( mDeck.getCard(1) );
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -74,8 +79,6 @@ public class GameView extends SurfaceView implements Runnable
         //updating card position + hit box
         if(activeCard != null)
             activeCard.update();
-
-        Log.v("Update()","Called Successfull");
     }
 
     private void draw()
@@ -86,8 +89,6 @@ public class GameView extends SurfaceView implements Runnable
             //locking the canvas
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
-
-            Log.v("Draw()","Colored Background");
 
             if( activeCard == null )
             {
@@ -106,8 +107,6 @@ public class GameView extends SurfaceView implements Runnable
                         drawCard(mCStack.getAt(i));
                 }
             }
-
-            Log.v("Draw()","Drawn Cards");
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -150,11 +149,6 @@ public class GameView extends SurfaceView implements Runnable
         gameThread.start();
     }
 
-
-    private Point userCollisionDetection;
-    private Card activeCard;
-    int x, y;
-
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent)
     {
@@ -165,18 +159,15 @@ public class GameView extends SurfaceView implements Runnable
                 draw();
                 break;
             case MotionEvent.ACTION_DOWN:
-                userCollisionDetection = new Point((int)motionEvent.getX(), (int)motionEvent.getY() );
-
-                Log.v("onTouch()","Pressed");
+                Point userCollisionDetection = new Point((int)motionEvent.getX(), (int)motionEvent.getY() );
 
                 if( mCStack.getTop().getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) )
                 {
                     mCStack.getTop().turnUp();
+
                     activeCard = mCStack.getTop();
                 }
-
-                Log.v("onTouch()","Got Active Card");
-
+                draw();
                 break;
             case MotionEvent.ACTION_MOVE:
                 // When user drags across screen
@@ -190,7 +181,6 @@ public class GameView extends SurfaceView implements Runnable
 
                     draw();
                 }
-
                 break;
         }
 
