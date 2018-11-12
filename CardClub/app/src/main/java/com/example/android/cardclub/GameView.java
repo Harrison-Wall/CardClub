@@ -24,7 +24,7 @@ public class GameView extends SurfaceView implements Runnable
     // Card to draw
     //private Card c1, c2;
 
-    private int[] redourceIDArray = new int[52];
+    private int[] mRedourceIDArray = new int[52];
     private Deck mDeck;
     private CardStack mCStack;
 
@@ -38,9 +38,23 @@ public class GameView extends SurfaceView implements Runnable
     {
         super(context);
 
-        // Set up the card
-        //c1 = new Card(1, 1, false, ScreenX/4, ScreenY/4, R.drawable.c_2 , context);
-        //c2 = new Card(1, 1, false, ScreenX/4+500, ScreenY/4, R.drawable.h_a , context);
+        addReources(mRedourceIDArray); // Add Bitmap resource IDs
+        mDeck = new Deck(context, mRedourceIDArray); // Create the Deck of Cards
+        //mDeck.shuffleDeck();
+
+        mCStack = new CardStack();
+        mCStack.setX(ScreenX/4);
+        mCStack.setY(ScreenY/4);
+
+        // Add a few Cards to the stack
+        mCStack.addCard( mDeck.getCard(0) );
+        mCStack.addCard( mDeck.getCard(1) );
+
+        /*c1 = mDeck.getCard(35);
+        c2 = mDeck.getCard(51);
+
+        c1.setCurrX(ScreenX/4);
+        c1.setCurrY(ScreenY/4);*/
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -68,6 +82,10 @@ public class GameView extends SurfaceView implements Runnable
         //updating player position
         //c1.update();
         //c2.update();
+        for( int i = 0; i <  mCStack.getSize(); i++ )
+        {
+            mCStack.getAt(i).update();
+        }
     }
 
     private void draw()
@@ -79,36 +97,42 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            if( activeCard == null )
+            /*if( activeCard == null )
             {
-                /*if( c1.isFaceUp() )
-                    canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
-                else
-                    canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
+                drawCard(c1);
 
-                if( c2.isFaceUp() )
-                    canvas.drawBitmap(c2.getFaceMap(), c2.getCurrX(), c2.getCurrY(), paint);
-                else
-                    canvas.drawBitmap(c2.getBackMap(), c2.getCurrX(), c2.getCurrY(), paint);*/
+                drawCard(c2);
             }
             else
             {
-                canvas.drawBitmap(activeCard.getFaceMap(), activeCard.getCurrX(), activeCard.getCurrY(), paint);
+                drawCard(activeCard);
 
-                /*if( activeCard.getID() == c1.getID() )
+                if( activeCard.getID() == c1.getID() )
                 {
-                    if( c2.isFaceUp() )
-                        canvas.drawBitmap(c2.getFaceMap(), c2.getCurrX(), c2.getCurrY(), paint);
-                    else
-                        canvas.drawBitmap(c2.getBackMap(), c2.getCurrX(), c2.getCurrY(), paint);
+                    drawCard(c2);
                 }
                 else
                 {
-                    if( c1.isFaceUp() )
-                        canvas.drawBitmap(c1.getFaceMap(), c1.getCurrX(), c1.getCurrY(), paint);
+                    drawCard(c1);
+                }
+            }*/
+
+            if( activeCard == null )
+            {
+                for( int i = 0; i < mCStack.getSize(); i++ )
+                {
+                    drawCard(mCStack.getAt(i));
+                }
+            }
+            else
+            {
+                for( int i = 0; i < mCStack.getSize(); i++ )
+                {
+                    if( activeCard.getID() == mCStack.getAt(i).getID() )
+                        drawCard(activeCard);
                     else
-                        canvas.drawBitmap(c1.getBackMap(), c1.getCurrX(), c1.getCurrY(), paint);
-                }*/
+                        drawCard(mCStack.getAt(i));
+                }
             }
 
             //Unlocking the canvas
@@ -179,6 +203,12 @@ public class GameView extends SurfaceView implements Runnable
                     activeCard = c2;
                 }*/
 
+                if( mCStack.getTop().getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y ) )
+                {
+                    mCStack.getTop().turnUp();
+                    activeCard = mCStack.getTop();
+                }
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 // When user drags across screen
@@ -197,6 +227,14 @@ public class GameView extends SurfaceView implements Runnable
         }
 
         return true;
+    }
+
+    public void drawCard(Card pCard)
+    {
+        if( pCard.isFaceUp() )
+            canvas.drawBitmap(pCard.getFaceMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
+        else
+            canvas.drawBitmap(pCard.getBackMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
     }
 
     public void addReources(int array[])
