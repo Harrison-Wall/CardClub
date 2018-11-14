@@ -139,6 +139,11 @@ public class GameView extends SurfaceView implements Runnable
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
         {
             case MotionEvent.ACTION_UP:
+                // Check if on the top of a stack
+                    // If so -> check valid
+                        // If so -> add card to stack
+
+                //else return card to stacks coordinates
                 activeCard = null;
                 draw();
                 break;
@@ -152,14 +157,10 @@ public class GameView extends SurfaceView implements Runnable
                 draw();
                 break;
             case MotionEvent.ACTION_MOVE:
-                // When user drags across screen
-                x = (int)motionEvent.getX();
-                y = (int)motionEvent.getY();
-
                 if( activeCard != null )
                 {
-                    activeCard.setCurrX(x);
-                    activeCard.setCurrY(y);
+                    activeCard.setCurrX((int)motionEvent.getX());
+                    activeCard.setCurrY((int)motionEvent.getY());
 
                     draw();
                 }
