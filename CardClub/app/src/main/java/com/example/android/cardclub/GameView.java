@@ -51,6 +51,8 @@ public class GameView extends SurfaceView implements Runnable
         mCStack.addCard( mDeck.getCard(3) );
         mCStack.addCard( mDeck.getCard(4) );
 
+        mCStack.getTop().turnUp();
+
         // Set up paint. surface etc
         sHolder = getHolder();
         paint = new Paint();
@@ -88,10 +90,7 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            for( int i = 0; i < mCStack.getSize(); i++ )
-            {
-                drawCard(mCStack.getAt(i));
-            }
+            drawCardStack(mCStack);
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -178,6 +177,14 @@ public class GameView extends SurfaceView implements Runnable
             canvas.drawBitmap(pCard.getFaceMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
         else
             canvas.drawBitmap(pCard.getBackMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
+    }
+
+    public void drawCardStack(CardStack pCStack)
+    {
+        for( int i = 0; i < pCStack.getSize(); i++ )
+        {
+            drawCard(pCStack.getAt(i));
+        }
     }
 
     public void addReources(int array[])
