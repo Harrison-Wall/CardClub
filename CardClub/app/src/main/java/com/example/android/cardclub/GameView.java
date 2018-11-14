@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -37,7 +38,7 @@ public class GameView extends SurfaceView implements Runnable
         addResources(mResourceIDArray); // Add Bitmap resource IDs
 
         Deck mDeck = new Deck(context, mResourceIDArray); // Create the Deck of Cards
-        mDeck.shuffleDeck();
+        //mDeck.shuffleDeck();
 
         mCStack = new CardStack(0,ScreenX/4,ScreenY/4); // Create a Stack of Cards
 
@@ -50,10 +51,10 @@ public class GameView extends SurfaceView implements Runnable
         // second stack
         mCStack2 = new CardStack(1, (ScreenX/4)+500, ScreenY/4);
 
-        mCStack2.addCard( mDeck.getCard(5) );
-        mCStack2.addCard( mDeck.getCard(6) );
-        mCStack2.addCard( mDeck.getCard(7) );
-        mCStack2.addCard( mDeck.getCard(8) );
+        mCStack2.addCard( mDeck.getCard(13) );
+        mCStack2.addCard( mDeck.getCard(14) );
+        mCStack2.addCard( mDeck.getCard(15) );
+        mCStack2.addCard( mDeck.getCard(18) );
         mCStack2.getTop().turnUp();
 
         // Set up paint. surface etc
@@ -95,6 +96,9 @@ public class GameView extends SurfaceView implements Runnable
 
             drawCardStack(mCStack);
             drawCardStack(mCStack2);
+
+            if(activeCard != null)
+                drawCard(activeCard);
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -145,18 +149,37 @@ public class GameView extends SurfaceView implements Runnable
             case MotionEvent.ACTION_UP:
                 if(activeCard != null)
                 {
-                    // Check if on the top of a stack
-                    // If so -> check valid
-                    // If so -> add card to stack
+                    if( mCStack2.getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
+                    {
+                        Log.d("ACTION_UP", "Card Placed on Stack");
 
-                    //reset coordinate tracker
+                        if( isValidPlacement(mCStack2.getTop(), activeCard) )// If so -> check valid
+                        {
+                            Log.d("ACTION_UP", "Validated");
+                            mCStack2.addCard( activeCard ); // If so -> add card to stack
+                            Log.d("ACTION_UP", "Card Added To Stack");
+                        }
+                        else
+                        {
+                            Log.d("ACTION_UP", "Card Not Valid");
+                            activeCard.setCurrX(oldX);
+                            activeCard.setCurrY(oldY);
+                            Log.d("ACTION_UP", "Card Moved Back");
+                        }
 
-                    //else return card to stacks coordinates
-                    activeCard.setCurrX(oldX);
-                    activeCard.setCurrY(oldY);
+                    }
+                    else
+                    {
+                        Log.d("ACTION_UP", "Card placed in bad spot");
+                        //else return card to stacks coordinates
+                        activeCard.setCurrX(oldX);
+                        activeCard.setCurrY(oldY);
+                        Log.d("ACTION_UP", "Card Moved Back");
+                    }
+
                     activeCard.update();
-
                     activeCard = null;
+                    Log.d("ACTION_UP", "Active Card released");
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -164,22 +187,12 @@ public class GameView extends SurfaceView implements Runnable
                 {
                     mCStack.getTop().turnUp();
 
-                    activeCard = mCStack.getTop();
+                    activeCard = mCStack.removeTop();
 
                     //remember current stack's coordinates
                     oldX = activeCard.getCurrX();
                     oldY = activeCard.getCurrY();
 
-                }
-                else if(mCStack2.getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()))
-                {
-                    mCStack2.getTop().turnUp();
-
-                    activeCard = mCStack2.getTop();
-
-                    //remember current stack's coordinates
-                    oldX = activeCard.getCurrX();
-                    oldY = activeCard.getCurrY();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -212,6 +225,19 @@ public class GameView extends SurfaceView implements Runnable
         }
     }
 
+    public boolean isValidPlacement(Card topCard, Card currCard)
+    {
+        boolean retVal = false;
+
+        if( (topCard.isRed() != currCard.isRed()) && (topCard.getValue() == currCard.getValue()+1) )
+        {
+            retVal = true;
+        }
+
+        return retVal;
+    }
+
+    // TODO: Move this to the Deck class
     public void addResources(int array[])
     {
         // Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
