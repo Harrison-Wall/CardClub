@@ -152,6 +152,10 @@ public class GameView extends SurfaceView implements Runnable
                     //reset coordinate tracker
 
                     //else return card to stacks coordinates
+                    activeCard.setCurrX(oldX);
+                    activeCard.setCurrY(oldY);
+                    activeCard.update();
+
                     activeCard = null;
                 }
                 break;
@@ -163,6 +167,8 @@ public class GameView extends SurfaceView implements Runnable
                     activeCard = mCStack.getTop();
 
                     //remember current stack's coordinates
+                    oldX = activeCard.getCurrX();
+                    oldY = activeCard.getCurrY();
 
                 }
                 else if(mCStack2.getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()))
@@ -170,6 +176,10 @@ public class GameView extends SurfaceView implements Runnable
                     mCStack2.getTop().turnUp();
 
                     activeCard = mCStack2.getTop();
+
+                    //remember current stack's coordinates
+                    oldX = activeCard.getCurrX();
+                    oldY = activeCard.getCurrY();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
