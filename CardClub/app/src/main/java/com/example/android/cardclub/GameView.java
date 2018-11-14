@@ -88,22 +88,9 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            if( activeCard == null )
+            for( int i = 0; i < mCStack.getSize(); i++ )
             {
-                for( int i = 0; i < mCStack.getSize(); i++ )
-                {
-                    drawCard(mCStack.getAt(i));
-                }
-            }
-            else
-            {
-                for( int i = 0; i < mCStack.getSize(); i++ )
-                {
-                    if( activeCard.getID() == mCStack.getAt(i).getID() )
-                        drawCard(activeCard);
-                    else
-                        drawCard(mCStack.getAt(i));
-                }
+                drawCard(mCStack.getAt(i));
             }
 
             //Unlocking the canvas
