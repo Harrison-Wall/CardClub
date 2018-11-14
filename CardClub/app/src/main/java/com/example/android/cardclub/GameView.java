@@ -17,7 +17,7 @@ public class GameView extends SurfaceView implements Runnable
 
     //the game thread
     private Thread gameThread = null;
-    private CardStack mCStack;      // Stack of cards
+    private CardStack mCStack, mCStack2;      // Stack of cards
 
     // Used for drawing
     private Paint paint;
@@ -26,6 +26,7 @@ public class GameView extends SurfaceView implements Runnable
 
     // Used for moving cards
     private Card activeCard;
+    private int oldX, oldY;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
@@ -44,8 +45,16 @@ public class GameView extends SurfaceView implements Runnable
         mCStack.addCard( mDeck.getCard(1) );
         mCStack.addCard( mDeck.getCard(3) );
         mCStack.addCard( mDeck.getCard(4) );
-
         mCStack.getTop().turnUp();
+
+        // second stack
+        mCStack2 = new CardStack(1, (ScreenX/4)+500, ScreenY/4);
+
+        mCStack2.addCard( mDeck.getCard(5) );
+        mCStack2.addCard( mDeck.getCard(6) );
+        mCStack2.addCard( mDeck.getCard(7) );
+        mCStack2.addCard( mDeck.getCard(8) );
+        mCStack2.getTop().turnUp();
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -85,6 +94,7 @@ public class GameView extends SurfaceView implements Runnable
             canvas.drawColor(Color.rgb(25,200,50));
 
             drawCardStack(mCStack);
+            drawCardStack(mCStack2);
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -139,10 +149,10 @@ public class GameView extends SurfaceView implements Runnable
                     // If so -> check valid
                     // If so -> add card to stack
 
+                    //reset coordinate tracker
+
                     //else return card to stacks coordinates
                     activeCard = null;
-
-                    //reswt coordinate tracker
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -154,6 +164,12 @@ public class GameView extends SurfaceView implements Runnable
 
                     //remember current stack's coordinates
 
+                }
+                else if(mCStack2.getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()))
+                {
+                    mCStack2.getTop().turnUp();
+
+                    activeCard = mCStack2.getTop();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
