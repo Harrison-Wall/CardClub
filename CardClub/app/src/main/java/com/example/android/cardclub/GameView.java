@@ -143,9 +143,7 @@ public class GameView extends SurfaceView implements Runnable
                 draw();
                 break;
             case MotionEvent.ACTION_DOWN:
-                Point userCollisionDetection = new Point((int)motionEvent.getX(), (int)motionEvent.getY() );
-
-                if( mCStack.getTop().getDetectCollision().contains(userCollisionDetection.x, userCollisionDetection.y) )
+                if( mCStack.getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()) )
                 {
                     mCStack.getTop().turnUp();
 
