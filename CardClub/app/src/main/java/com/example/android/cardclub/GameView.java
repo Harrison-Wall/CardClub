@@ -1,12 +1,10 @@
 package com.example.android.cardclub;
 
 // Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,7 +16,9 @@ public class GameView extends SurfaceView implements Runnable
 
     //the game thread
     private Thread gameThread = null;
-    private CardStack mCStack, mCStack2;      // Stack of cards
+
+   // Stack of cards
+    private CardStack[] foundations;
 
     // Used for drawing
     private Paint paint;
@@ -27,7 +27,9 @@ public class GameView extends SurfaceView implements Runnable
 
     // Used for moving cards
     private Card activeCard;
-    private int oldX, oldY;
+    private int oldX, oldY, mTakenFrom;
+
+    private int NUM_FOUNDATIONS = 2;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
@@ -38,24 +40,21 @@ public class GameView extends SurfaceView implements Runnable
         addResources(mResourceIDArray); // Add Bitmap resource IDs
 
         Deck mDeck = new Deck(context, mResourceIDArray); // Create the Deck of Cards
-        //mDeck.shuffleDeck();
+        mDeck.shuffleDeck();
 
-        mCStack = new CardStack(0,ScreenX/4,ScreenY/4); // Create a Stack of Cards
+        foundations = new CardStack[NUM_FOUNDATIONS];
 
-        mCStack.addCard( mDeck.getCard(0) );
-        mCStack.addCard( mDeck.getCard(1) );
-        mCStack.addCard( mDeck.getCard(3) );
-        mCStack.addCard( mDeck.getCard(4) );
-        mCStack.getTop().turnUp();
+        for( int i = 0; i < NUM_FOUNDATIONS; i++ )
+        {
+            foundations[i] = new CardStack(i, ( (ScreenX/4) + (400*i) ), ScreenY/4);
 
-        // second stack
-        mCStack2 = new CardStack(1, (ScreenX/4)+500, ScreenY/4);
+            for(int j = 0; j < 5; j++)
+            {
+                foundations[i].addCard( mDeck.getCard(j) );
+            }
 
-        mCStack2.addCard( mDeck.getCard(13) );
-        mCStack2.addCard( mDeck.getCard(14) );
-        mCStack2.addCard( mDeck.getCard(15) );
-        mCStack2.addCard( mDeck.getCard(18) );
-        mCStack2.getTop().turnUp();
+            foundations[i].getTop().turnUp();
+        }
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -94,8 +93,10 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            drawCardStack(mCStack);
-            drawCardStack(mCStack2);
+            for(int i = 0; i < NUM_FOUNDATIONS; i++)
+            {
+                drawCardStack(foundations[i]);
+            }
 
             if(activeCard != null)
                 drawCard(activeCard);
@@ -147,52 +148,55 @@ public class GameView extends SurfaceView implements Runnable
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
         {
             case MotionEvent.ACTION_UP:
-                if(activeCard != null)
+                /*if(activeCard != null)
                 {
-                    if( mCStack2.getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
+                    for(int i = 0; i < NUM_FOUNDATIONS; i++)
                     {
-                        Log.d("ACTION_UP", "Card Placed on Stack");
+                        if( foundations[i].getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
+                        {
+                            if( isValidPlacement(foundations[i].getTop(), activeCard) )// If so -> check valid
+                            {
+                                foundations[i].addCard( activeCard ); // If so -> add card to stack
+                                break; // Break For
+                            }
+                            else
+                            {
+                                activeCard.setCurrX(oldX);
+                                activeCard.setCurrY(oldY);
+                                break; // Break For
+                            }
 
-                        if( isValidPlacement(mCStack2.getTop(), activeCard) )// If so -> check valid
-                        {
-                            Log.d("ACTION_UP", "Validated");
-                            mCStack2.addCard( activeCard ); // If so -> add card to stack
-                            Log.d("ACTION_UP", "Card Added To Stack");
                         }
-                        else
+
+                        if( i == NUM_FOUNDATIONS-1 ) // If last chance
                         {
-                            Log.d("ACTION_UP", "Card Not Valid");
+                            //else return card to stacks coordinates
                             activeCard.setCurrX(oldX);
                             activeCard.setCurrY(oldY);
-                            Log.d("ACTION_UP", "Card Moved Back");
                         }
-
-                    }
-                    else
-                    {
-                        Log.d("ACTION_UP", "Card placed in bad spot");
-                        //else return card to stacks coordinates
-                        activeCard.setCurrX(oldX);
-                        activeCard.setCurrY(oldY);
-                        Log.d("ACTION_UP", "Card Moved Back");
-                    }
+                    } // For
 
                     activeCard.update();
+                    foundations[mTakenFrom].addCard(activeCard); // Put the card back
                     activeCard = null;
-                    Log.d("ACTION_UP", "Active Card released");
-                }
+                }*/
                 break;
             case MotionEvent.ACTION_DOWN:
-                if( mCStack.getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()) )
+                for(int i = 0; i < NUM_FOUNDATIONS; i++)
                 {
-                    mCStack.getTop().turnUp();
+                    if( foundations[i].getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()) )
+                    {
+                        foundations[i].getTop().turnUp();
 
-                    activeCard = mCStack.removeTop();
+                        activeCard = foundations[i].removeTop();
+                        mTakenFrom = i; // Where did we take the card from
 
-                    //remember current stack's coordinates
-                    oldX = activeCard.getCurrX();
-                    oldY = activeCard.getCurrY();
+                        //remember current stack's coordinates
+                        oldX = activeCard.getCurrX();
+                        oldY = activeCard.getCurrY();
 
+                        break; // Break For
+                    }
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
