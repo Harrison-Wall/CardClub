@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,7 +30,7 @@ public class GameView extends SurfaceView implements Runnable
     private Card activeCard;
     private int oldX, oldY, mTakenFrom;
 
-    private int NUM_FOUNDATIONS = 2;
+    private int NUM_FOUNDATIONS = 2, j = 0;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
@@ -46,14 +47,16 @@ public class GameView extends SurfaceView implements Runnable
 
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(i, ( (ScreenX/4) + (400*i) ), ScreenY/4);
+            foundations[i] = new CardStack(i, ( (ScreenX/4) + (350*i) ), ScreenY/4);
+            Log.v("GameView", "Created new CardStack #"+i);
 
-            for(int j = 0; j < 5; j++)
-            {
-                foundations[i].addCard( mDeck.getCard(j) );
-            }
+            foundations[i].addCard( mDeck.getCard(i*2) );
+            foundations[i].addCard( mDeck.getCard(i+3) );
+                Log.v("GameView", "Added card to foundation #"+i);
+
 
             foundations[i].getTop().turnUp();
+            Log.v("GameView ", "Flipped top of foundation #"+i);
         }
 
         // Set up paint. surface etc
@@ -93,9 +96,11 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            for(int i = 0; i < NUM_FOUNDATIONS; i++)
+            for( int i = 0; i < NUM_FOUNDATIONS; i++ )
             {
-                drawCardStack(foundations[i]);
+                Log.v("draw", "Calling drawCardStack on foundation #"+i);
+                drawCardStack( foundations[i] );
+                Log.v("draw", "Done drawCardStack on foundation #"+i);
             }
 
             if(activeCard != null)
@@ -148,7 +153,7 @@ public class GameView extends SurfaceView implements Runnable
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK)
         {
             case MotionEvent.ACTION_UP:
-                /*if(activeCard != null)
+                if(activeCard != null)
                 {
                     for(int i = 0; i < NUM_FOUNDATIONS; i++)
                     {
@@ -179,7 +184,7 @@ public class GameView extends SurfaceView implements Runnable
                     activeCard.update();
                     foundations[mTakenFrom].addCard(activeCard); // Put the card back
                     activeCard = null;
-                }*/
+                }
                 break;
             case MotionEvent.ACTION_DOWN:
                 for(int i = 0; i < NUM_FOUNDATIONS; i++)
@@ -211,29 +216,30 @@ public class GameView extends SurfaceView implements Runnable
         return true;
     }
 
-    public void drawCard(Card pCard)
+    public void drawCard( Card pCard )
     {
         if( pCard.isFaceUp() )
-            canvas.drawBitmap(pCard.getFaceMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
+            canvas.drawBitmap( pCard.getFaceMap(), pCard.getCurrX(), pCard.getCurrY(), paint );
         else
-            canvas.drawBitmap(pCard.getBackMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
+            canvas.drawBitmap( pCard.getBackMap(), pCard.getCurrX(), pCard.getCurrY(), paint );
     }
 
-    public void drawCardStack(CardStack pCStack)
+    public void drawCardStack( CardStack pCStack )
     {
         int size = pCStack.getSize();
 
-        for( int i = 0; i < size; i++ )
+        for( int k = 0; k < size; k++ )
         {
-            drawCard(pCStack.getAt(i));
+            Log.v("drawCardStack", "Calling drawCard on card #"+k);
+            drawCard( pCStack.getAt(k) );
         }
     }
 
-    public boolean isValidPlacement(Card topCard, Card currCard)
+    public boolean isValidPlacement( Card topCard, Card currCard )
     {
         boolean retVal = false;
 
-        if( (topCard.isRed() != currCard.isRed()) && (topCard.getValue() == currCard.getValue()+1) )
+        if( ( topCard.isRed() != currCard.isRed() ) && ( topCard.getValue() == currCard.getValue()+1 ) )
         {
             retVal = true;
         }

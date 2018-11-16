@@ -1,5 +1,7 @@
 package com.example.android.cardclub;
 
+import android.util.Log;
+
 import java.util.Stack;
 
 public class CardStack
@@ -23,6 +25,8 @@ public class CardStack
         mX = pX;
         mY = pY;
         mCardStack = new Stack<Card>( );
+
+        Log.v("CardStack", "Constructor Called");
     }
 
     public void addCard(Card pCard)
@@ -34,6 +38,8 @@ public class CardStack
         mCardStack.push(pCard);
 
         mOffset += 50;
+
+        Log.v("addCard", "Card Added");
     }
 
     public Card removeTop()
