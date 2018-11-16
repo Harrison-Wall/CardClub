@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -30,7 +29,7 @@ public class GameView extends SurfaceView implements Runnable
     private Card activeCard;
     private int oldX, oldY, mTakenFrom;
 
-    private int NUM_FOUNDATIONS = 2;
+    private int NUM_FOUNDATIONS = 7;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
@@ -40,23 +39,24 @@ public class GameView extends SurfaceView implements Runnable
         Deck mDeck = new Deck(context); // Create the Deck of Cards
         mDeck.shuffleDeck();
 
+        // Set up 7 Foundations
         foundations = new CardStack[NUM_FOUNDATIONS];
-
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(i, ( (ScreenX/4) + (350*i) ), ScreenY/4);
+            foundations[i] = new CardStack(i, (300*i), ScreenY/4);
             foundations[i].setBackMap(context);
-
-            //for(int j = 0; j < 1; j++)
-            //{
-                //foundations[0].addCard( mDeck.dealCard() );
-            //}
-
-            //foundations[0].getTop().turnUp();
+            for(int j = 0; j < i+1; j++)
+            {
+                foundations[i].addCard( mDeck.dealCard() );
+            }
+            foundations[i].getTop().turnUp();
         }
 
-        foundations[0].addCard( mDeck.dealCard() );
-        foundations[0].getTop().turnUp();
+        //Set up 4 Piles
+
+        //Set up 1 Empty Pile
+
+        //Set up 1 Pile with rest of deck
 
         // Set up paint. surface etc
         sHolder = getHolder();

@@ -55,7 +55,7 @@ public class Card
         mfaceID = prID;
 
         mOps = new BitmapFactory.Options();
-        mOps.inDensity = 1300;
+        mOps.inDensity = 1500;
 
         setFaceMap(context);
         setBackMap(context);

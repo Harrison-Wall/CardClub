@@ -54,7 +54,7 @@ public class CardStack
     public void setBackMap(Context context)
     {
         BitmapFactory.Options myOps = new BitmapFactory.Options();
-        myOps.inDensity = 1300;
+        myOps.inDensity = 1500;
 
         mStackMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty_stack, myOps);
 
