@@ -55,7 +55,7 @@ public class Card
         mfaceID = prID;
 
         mOps = new BitmapFactory.Options();
-        mOps.inDensity = 1300;
+        mOps.inDensity = 1500;
 
         setFaceMap(context);
         setBackMap(context);
@@ -79,9 +79,25 @@ public class Card
         mBackMap = BitmapFactory.decodeResource(context.getResources(), mbackID, mOps);
     }
 
-    public void setCurrX(int pX) { mCurrX = pX; }
+    public void setLocation(int pX, int pY)
+    {
+        mCurrX = pX;
+        mCurrY = pY;
 
-    public void setCurrY(int pY) { mCurrY = pY; }
+        update();
+    }
+
+    public void setX(int pX)
+    {
+        mCurrX = pX;
+        update();
+    }
+
+    public void setY(int pY)
+    {
+        mCurrY = pY;
+        update();
+    }
 
     public void turnUp() { mfaceUp = true; }
 
@@ -130,12 +146,12 @@ public class Card
         return miValue;
     }
 
-    public int getCurrX()
+    public int getX()
     {
         return mCurrX;
     }
 
-    public int getCurrY()
+    public int getY()
     {
         return mCurrY;
     }

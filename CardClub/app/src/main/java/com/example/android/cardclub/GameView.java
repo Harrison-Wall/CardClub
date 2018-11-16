@@ -1,12 +1,10 @@
 package com.example.android.cardclub;
 
 // Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,7 +16,9 @@ public class GameView extends SurfaceView implements Runnable
 
     //the game thread
     private Thread gameThread = null;
-    private CardStack mCStack, mCStack2;      // Stack of cards
+
+   // Stack of cards
+    private CardStack[] foundations;
 
     // Used for drawing
     private Paint paint;
@@ -27,35 +27,36 @@ public class GameView extends SurfaceView implements Runnable
 
     // Used for moving cards
     private Card activeCard;
-    private int oldX, oldY;
+    private int oldX, oldY, mTakenFrom;
+
+    private int NUM_FOUNDATIONS = 7;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
     {
         super(context);
 
-        int[] mResourceIDArray = new int[52];
-        addResources(mResourceIDArray); // Add Bitmap resource IDs
+        Deck mDeck = new Deck(context); // Create the Deck of Cards
+        mDeck.shuffleDeck();
 
-        Deck mDeck = new Deck(context, mResourceIDArray); // Create the Deck of Cards
-        //mDeck.shuffleDeck();
+        // Set up 7 Foundations
+        foundations = new CardStack[NUM_FOUNDATIONS];
+        for( int i = 0; i < NUM_FOUNDATIONS; i++ )
+        {
+            foundations[i] = new CardStack(i, (300*i), ScreenY/4);
+            foundations[i].setBackMap(context);
+            for(int j = 0; j < i+1; j++)
+            {
+                foundations[i].addCard( mDeck.dealCard() );
+            }
+            foundations[i].getTop().turnUp();
+        }
 
-        mCStack = new CardStack(0,ScreenX/4,ScreenY/4); // Create a Stack of Cards
+        //Set up 4 Piles
 
-        mCStack.addCard( mDeck.getCard(0) );
-        mCStack.addCard( mDeck.getCard(1) );
-        mCStack.addCard( mDeck.getCard(3) );
-        mCStack.addCard( mDeck.getCard(4) );
-        mCStack.getTop().turnUp();
+        //Set up 1 Empty Pile
 
-        // second stack
-        mCStack2 = new CardStack(1, (ScreenX/4)+500, ScreenY/4);
-
-        mCStack2.addCard( mDeck.getCard(13) );
-        mCStack2.addCard( mDeck.getCard(14) );
-        mCStack2.addCard( mDeck.getCard(15) );
-        mCStack2.addCard( mDeck.getCard(18) );
-        mCStack2.getTop().turnUp();
+        //Set up 1 Pile with rest of deck
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -94,8 +95,10 @@ public class GameView extends SurfaceView implements Runnable
             canvas = sHolder.lockCanvas();
             canvas.drawColor(Color.rgb(25,200,50));
 
-            drawCardStack(mCStack);
-            drawCardStack(mCStack2);
+            for( int i = 0; i < NUM_FOUNDATIONS; i++ )
+            {
+                drawCardStack( foundations[i] );
+            }
 
             if(activeCard != null)
                 drawCard(activeCard);
@@ -149,160 +152,93 @@ public class GameView extends SurfaceView implements Runnable
             case MotionEvent.ACTION_UP:
                 if(activeCard != null)
                 {
-                    if( mCStack2.getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
+                    for(int i = 0; i < NUM_FOUNDATIONS; i++)
                     {
-                        Log.d("ACTION_UP", "Card Placed on Stack");
-
-                        if( isValidPlacement(mCStack2.getTop(), activeCard) )// If so -> check valid
+                        // Check if on empty stack
+                        if( (foundations[i].isEmpty()) ) // No Cards on stack
                         {
-                            Log.d("ACTION_UP", "Validated");
-                            mCStack2.addCard( activeCard ); // If so -> add card to stack
-                            Log.d("ACTION_UP", "Card Added To Stack");
+                            if( foundations[i].getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) )
+                            {
+                                foundations[i].addCard( activeCard );
+                                mTakenFrom = -1;
+                                break; // Break For
+                            }
                         }
                         else
                         {
-                            Log.d("ACTION_UP", "Card Not Valid");
-                            activeCard.setCurrX(oldX);
-                            activeCard.setCurrY(oldY);
-                            Log.d("ACTION_UP", "Card Moved Back");
+                            if( foundations[i].getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
+                            {
+                                if( isValidPlacement(foundations[i].getTop(), activeCard) )// If so -> check valid
+                                {
+                                    foundations[i].addCard( activeCard ); // If so -> add card to stack
+                                    mTakenFrom = -1;
+                                    break; // Break For
+                                }
+                            }
                         }
 
-                    }
-                    else
+                    } // For
+
+                    if( mTakenFrom >= 0 )
                     {
-                        Log.d("ACTION_UP", "Card placed in bad spot");
-                        //else return card to stacks coordinates
-                        activeCard.setCurrX(oldX);
-                        activeCard.setCurrY(oldY);
-                        Log.d("ACTION_UP", "Card Moved Back");
+                        foundations[mTakenFrom].addCard(activeCard); // Put the card back
                     }
 
-                    activeCard.update();
                     activeCard = null;
-                    Log.d("ACTION_UP", "Active Card released");
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-                if( mCStack.getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()) )
+                for(int i = 0; i < NUM_FOUNDATIONS; i++)
                 {
-                    mCStack.getTop().turnUp();
-
-                    activeCard = mCStack.removeTop();
-
-                    //remember current stack's coordinates
-                    oldX = activeCard.getCurrX();
-                    oldY = activeCard.getCurrY();
-
+                    if( !foundations[i].isEmpty() ) // Make sure cardStack is not empty
+                    {
+                        if (foundations[i].getTop().getDetectCollision().contains((int) motionEvent.getX(), (int) motionEvent.getY()))
+                        {
+                            foundations[i].getTop().turnUp();
+                            activeCard = foundations[i].removeTop();
+                            mTakenFrom = i; // Where did we take the card from
+                            break; // Break For
+                        }
+                    }
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if( activeCard != null )
                 {
-                    activeCard.setCurrX((int)motionEvent.getX());
-                    activeCard.setCurrY((int)motionEvent.getY());
+                    activeCard.setLocation( (int)motionEvent.getX(), (int)motionEvent.getY() );
                 }
                 break;
         }
-
         return true;
     }
 
-    public void drawCard(Card pCard)
+    public void drawCard( Card pCard )
     {
         if( pCard.isFaceUp() )
-            canvas.drawBitmap(pCard.getFaceMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
+            canvas.drawBitmap( pCard.getFaceMap(), pCard.getX(), pCard.getY(), paint );
         else
-            canvas.drawBitmap(pCard.getBackMap(), pCard.getCurrX(), pCard.getCurrY(), paint);
+            canvas.drawBitmap( pCard.getBackMap(), pCard.getX(), pCard.getY(), paint );
     }
 
-    public void drawCardStack(CardStack pCStack)
+    public void drawCardStack( CardStack pCStack )
     {
-        int size = pCStack.getSize();
+        canvas.drawBitmap( pCStack.getStackMap(), pCStack.getX(), pCStack.getY(), paint);
 
-        for( int i = 0; i < size; i++ )
+        for( int k = 0; k < pCStack.getSize(); k++ )
         {
-            drawCard(pCStack.getAt(i));
+            drawCard( pCStack.getAt(k) );
         }
     }
 
-    public boolean isValidPlacement(Card topCard, Card currCard)
+    public boolean isValidPlacement( Card topCard, Card currCard )
     {
         boolean retVal = false;
 
-        if( (topCard.isRed() != currCard.isRed()) && (topCard.getValue() == currCard.getValue()+1) )
+        if( ( topCard.isRed() != currCard.isRed() ) && ( topCard.getValue() == currCard.getValue()+1 ) )
         {
             retVal = true;
         }
 
         return retVal;
     }
-
-    // TODO: Move this to the Deck class
-    public void addResources(int array[])
-    {
-        // Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
-        if( array.length >= 51 )
-        {
-            // Clubs
-            array[0] = R.drawable.c_a;
-            array[1] = R.drawable.c_2;
-            array[2] = R.drawable.c_3;
-            array[3] = R.drawable.c_4;
-            array[4] = R.drawable.c_5;
-            array[5] = R.drawable.c_6;
-            array[6] = R.drawable.c_7;
-            array[7] = R.drawable.c_8;
-            array[8] = R.drawable.c_9;
-            array[9] = R.drawable.c_10;
-            array[10] = R.drawable.c_j;
-            array[11] = R.drawable.c_q;
-            array[12] = R.drawable.c_k;
-
-            // Diamonds
-            array[13] = R.drawable.d_a;
-            array[14] = R.drawable.d_2;
-            array[15] = R.drawable.d_3;
-            array[16] = R.drawable.d_4;
-            array[17] = R.drawable.d_5;
-            array[18] = R.drawable.d_6;
-            array[19] = R.drawable.d_7;
-            array[20] = R.drawable.d_8;
-            array[21] = R.drawable.d_9;
-            array[22] = R.drawable.d_10;
-            array[23] = R.drawable.d_j;
-            array[24] = R.drawable.d_q;
-            array[25] = R.drawable.d_k;
-
-            // Hearts
-            array[26] = R.drawable.h_a;
-            array[27] = R.drawable.h_2;
-            array[28] = R.drawable.h_3;
-            array[29] = R.drawable.h_4;
-            array[30] = R.drawable.h_5;
-            array[31] = R.drawable.h_6;
-            array[32] = R.drawable.h_7;
-            array[33] = R.drawable.h_8;
-            array[34] = R.drawable.h_9;
-            array[35] = R.drawable.h_10;
-            array[36] = R.drawable.h_j;
-            array[37] = R.drawable.h_q;
-            array[38] = R.drawable.h_k;
-
-            // Spades
-            array[39] = R.drawable.s_a;
-            array[40] = R.drawable.s_2;
-            array[41] = R.drawable.s_3;
-            array[42] = R.drawable.s_4;
-            array[43] = R.drawable.s_5;
-            array[44] = R.drawable.s_6;
-            array[45] = R.drawable.s_7;
-            array[46] = R.drawable.s_8;
-            array[47] = R.drawable.s_9;
-            array[48] = R.drawable.s_10;
-            array[49] = R.drawable.s_j;
-            array[50] = R.drawable.s_q;
-            array[51] = R.drawable.s_k;
-        }
-    }
-
 }

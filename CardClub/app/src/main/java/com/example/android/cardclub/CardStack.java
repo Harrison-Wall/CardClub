@@ -1,5 +1,11 @@
 package com.example.android.cardclub;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.util.Log;
+
 import java.util.Stack;
 
 public class CardStack
@@ -7,46 +13,65 @@ public class CardStack
     private int mID, mOffset, mX, mY;
     private Stack<Card> mCardStack;
 
+    private Bitmap mStackMap;
+    private Rect mDetectCollision;
+
     public CardStack()
     {
         mID = 0;
-        mOffset = 50;
+        mOffset = 0;
         mX = 0;
         mY = 0;
         mCardStack = new Stack<Card>( );
+        mDetectCollision = new Rect();
     }
 
     public CardStack(int pID, int pX, int pY)
     {
         mID = pID;
-        mOffset = 50;
+        mOffset = 0;
         mX = pX;
         mY = pY;
         mCardStack = new Stack<Card>( );
+        mDetectCollision = new Rect();
     }
 
     public void addCard(Card pCard)
     {
-        pCard.setCurrX( mX );
-        pCard.setCurrY( mY + mOffset); // Next Card should be below the previous
-        pCard.update(); // Update hit box
+        pCard.setLocation(mX, (mY + mOffset));
 
         mCardStack.push(pCard);
 
-        mOffset += 50;
+        mOffset += 75;
     }
 
     public Card removeTop()
     {
-        mOffset -= 50;
+        mOffset -= 75;
         return mCardStack.pop();
     }
 
+    public void setBackMap(Context context)
+    {
+        BitmapFactory.Options myOps = new BitmapFactory.Options();
+        myOps.inDensity = 1500;
 
-    // Getters
-    public boolean isEmpty() { return mCardStack.isEmpty(); }
+        mStackMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty_stack, myOps);
+
+        mDetectCollision.left = mX;
+        mDetectCollision.top = mY + mOffset;
+        mDetectCollision.right = mX + mStackMap.getWidth();
+        mDetectCollision.bottom = mY + mOffset + mStackMap.getHeight();
+    }
 
     public Card getAt(int index) { return mCardStack.elementAt(index); }
+
+    // Getters
+    public Bitmap getStackMap() { return mStackMap; }
+
+    public Rect getDetectCollision() { return mDetectCollision; }
+
+    public boolean isEmpty() { return mCardStack.isEmpty(); }
 
     public Card getTop() { return mCardStack.peek(); }
 
