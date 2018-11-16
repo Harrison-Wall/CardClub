@@ -31,8 +31,8 @@ public class CardStack
 
     public void addCard(Card pCard)
     {
-        pCard.setCurrX( mX );
-        pCard.setCurrY( mY + mOffset); // Next Card should be below the previous
+        pCard.setX( mX );
+        pCard.setY( mY + mOffset); // Next Card should be below the previous
         pCard.update(); // Update hit box
 
         mCardStack.push(pCard);

@@ -65,7 +65,7 @@ public class GameView extends SurfaceView implements Runnable
         while (playing)
         {
             //to update the frame
-            update();
+            //update();
 
             //to draw the frame
             draw();
@@ -159,8 +159,7 @@ public class GameView extends SurfaceView implements Runnable
                             }
                             else
                             {
-                                activeCard.setCurrX(oldX);
-                                activeCard.setCurrY(oldY);
+                                activeCard.setLocation(oldX, oldY);
                                 break; // Break For
                             }
 
@@ -169,8 +168,7 @@ public class GameView extends SurfaceView implements Runnable
                         if( i == NUM_FOUNDATIONS-1 ) // If last chance
                         {
                             //else return card to stacks coordinates
-                            activeCard.setCurrX(oldX);
-                            activeCard.setCurrY(oldY);
+                            activeCard.setLocation(oldX, oldY);
                         }
                     } // For
 
@@ -190,8 +188,8 @@ public class GameView extends SurfaceView implements Runnable
                         mTakenFrom = i; // Where did we take the card from
 
                         //remember current stack's coordinates
-                        oldX = activeCard.getCurrX();
-                        oldY = activeCard.getCurrY();
+                        oldX = activeCard.getX();
+                        oldY = activeCard.getY();
 
                         break; // Break For
                     }
@@ -200,8 +198,7 @@ public class GameView extends SurfaceView implements Runnable
             case MotionEvent.ACTION_MOVE:
                 if( activeCard != null )
                 {
-                    activeCard.setCurrX((int)motionEvent.getX());
-                    activeCard.setCurrY((int)motionEvent.getY());
+                    activeCard.setLocation( (int)motionEvent.getX(), (int)motionEvent.getY() );
                 }
                 break;
         }
@@ -212,9 +209,9 @@ public class GameView extends SurfaceView implements Runnable
     public void drawCard( Card pCard )
     {
         if( pCard.isFaceUp() )
-            canvas.drawBitmap( pCard.getFaceMap(), pCard.getCurrX(), pCard.getCurrY(), paint );
+            canvas.drawBitmap( pCard.getFaceMap(), pCard.getX(), pCard.getY(), paint );
         else
-            canvas.drawBitmap( pCard.getBackMap(), pCard.getCurrX(), pCard.getCurrY(), paint );
+            canvas.drawBitmap( pCard.getBackMap(), pCard.getX(), pCard.getY(), paint );
     }
 
     public void drawCardStack( CardStack pCStack )
