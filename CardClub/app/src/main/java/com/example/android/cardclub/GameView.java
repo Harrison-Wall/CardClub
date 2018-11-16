@@ -45,14 +45,18 @@ public class GameView extends SurfaceView implements Runnable
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
             foundations[i] = new CardStack(i, ( (ScreenX/4) + (350*i) ), ScreenY/4);
+            foundations[i].setBackMap(context);
 
-            for(int j = 0; j < 1; j++)
-            {
-                foundations[i].addCard( mDeck.dealCard() );
-            }
+            //for(int j = 0; j < 1; j++)
+            //{
+                //foundations[0].addCard( mDeck.dealCard() );
+            //}
 
-            foundations[i].getTop().turnUp();
+            //foundations[0].getTop().turnUp();
         }
+
+        foundations[0].addCard( mDeck.dealCard() );
+        foundations[0].getTop().turnUp();
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -65,7 +69,7 @@ public class GameView extends SurfaceView implements Runnable
         while (playing)
         {
             //to update the frame
-            //update();
+            update();
 
             //to draw the frame
             draw();
@@ -150,48 +154,51 @@ public class GameView extends SurfaceView implements Runnable
                 {
                     for(int i = 0; i < NUM_FOUNDATIONS; i++)
                     {
-                        if( foundations[i].getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
+                        // Check if on empty stack
+                        if( (foundations[i].isEmpty()) ) // No Cards on stack
                         {
-                            if( isValidPlacement(foundations[i].getTop(), activeCard) )// If so -> check valid
+                            if( foundations[i].getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) )
                             {
-                                foundations[i].addCard( activeCard ); // If so -> add card to stack
+                                foundations[i].addCard( activeCard );
+                                mTakenFrom = -1;
                                 break; // Break For
                             }
-                            else
-                            {
-                                activeCard.setLocation(oldX, oldY);
-                                break; // Break For
-                            }
-
                         }
-
-                        if( i == NUM_FOUNDATIONS-1 ) // If last chance
+                        else
                         {
-                            //else return card to stacks coordinates
-                            activeCard.setLocation(oldX, oldY);
+                            if( foundations[i].getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
+                            {
+                                if( isValidPlacement(foundations[i].getTop(), activeCard) )// If so -> check valid
+                                {
+                                    foundations[i].addCard( activeCard ); // If so -> add card to stack
+                                    mTakenFrom = -1;
+                                    break; // Break For
+                                }
+                            }
                         }
+
                     } // For
 
-                    activeCard.update();
-                    foundations[mTakenFrom].addCard(activeCard); // Put the card back
+                    if( mTakenFrom >= 0 )
+                    {
+                        foundations[mTakenFrom].addCard(activeCard); // Put the card back
+                    }
+
                     activeCard = null;
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
                 for(int i = 0; i < NUM_FOUNDATIONS; i++)
                 {
-                    if( foundations[i].getTop().getDetectCollision().contains((int)motionEvent.getX(), (int)motionEvent.getY()) )
+                    if( !foundations[i].isEmpty() ) // Make sure cardStack is not empty
                     {
-                        foundations[i].getTop().turnUp();
-
-                        activeCard = foundations[i].removeTop();
-                        mTakenFrom = i; // Where did we take the card from
-
-                        //remember current stack's coordinates
-                        oldX = activeCard.getX();
-                        oldY = activeCard.getY();
-
-                        break; // Break For
+                        if (foundations[i].getTop().getDetectCollision().contains((int) motionEvent.getX(), (int) motionEvent.getY()))
+                        {
+                            foundations[i].getTop().turnUp();
+                            activeCard = foundations[i].removeTop();
+                            mTakenFrom = i; // Where did we take the card from
+                            break; // Break For
+                        }
                     }
                 }
                 break;
@@ -202,7 +209,6 @@ public class GameView extends SurfaceView implements Runnable
                 }
                 break;
         }
-
         return true;
     }
 
@@ -216,9 +222,9 @@ public class GameView extends SurfaceView implements Runnable
 
     public void drawCardStack( CardStack pCStack )
     {
-        int size = pCStack.getSize();
+        canvas.drawBitmap( pCStack.getStackMap(), pCStack.getX(), pCStack.getY(), paint);
 
-        for( int k = 0; k < size; k++ )
+        for( int k = 0; k < pCStack.getSize(); k++ )
         {
             drawCard( pCStack.getAt(k) );
         }
