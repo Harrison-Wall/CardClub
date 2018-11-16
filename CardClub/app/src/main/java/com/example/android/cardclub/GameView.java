@@ -48,15 +48,13 @@ public class GameView extends SurfaceView implements Runnable
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
             foundations[i] = new CardStack(i, ( (ScreenX/4) + (350*i) ), ScreenY/4);
-            Log.v("GameView", "Created new CardStack #"+i);
 
-            foundations[i].addCard( mDeck.getCard(i*2) );
-            foundations[i].addCard( mDeck.getCard(i+3) );
-                Log.v("GameView", "Added card to foundation #"+i);
-
+            for(int j = 0; j < 5; j++)
+            {
+                foundations[i].addCard( mDeck.dealCard() );
+            }
 
             foundations[i].getTop().turnUp();
-            Log.v("GameView ", "Flipped top of foundation #"+i);
         }
 
         // Set up paint. surface etc

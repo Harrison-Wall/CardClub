@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Deck
 {
     private int deckSize = 52;
+    private int cardsDelt;
     private ArrayList<Card> deckOfCards = new ArrayList<Card>();
 
     Deck( )
@@ -16,6 +17,8 @@ public class Deck
         {
             deckOfCards.add(new Card( ((i%13)+1), (i/13), false));
         }
+
+        cardsDelt = 0;
     }
 
     /**
@@ -30,6 +33,8 @@ public class Deck
         {
             deckOfCards.add( new Card( ((i%13)+1), (i/13), false) );
         }
+
+        cardsDelt = 0;
     }
 
     // Deck with display data in the cards
@@ -39,13 +44,11 @@ public class Deck
         {
             deckOfCards.add(new Card( ((i%13)+1), (i/13), false, 0, 0, resArray[i], context ));
         }
+
+        cardsDelt = 0;
     }
 
-    /**
-     * Returns a Card at a specified location.
-     * @param pIndex (int)
-     * @return Card
-     */
+
     public Card getCard (int pIndex)
     {
         return deckOfCards.get(pIndex);
@@ -53,9 +56,25 @@ public class Deck
 
     public int getSize () {return deckSize;}
 
-    /**
-     * Randomly Shuffles the Deck
-     */
+    public int getCardsDelt() {return cardsDelt;}
+
+    public Card dealCard()
+    {
+        Card retVal;
+
+        if( cardsDelt < deckSize )
+        {
+            retVal = getCard(cardsDelt);
+            cardsDelt++;
+        }
+        else
+        {
+            retVal = null;
+        }
+
+        return retVal;
+    }
+
     public void shuffleDeck()
     {
 
@@ -80,9 +99,6 @@ public class Deck
 
     }
 
-    /**
-     * Puts the deck into order by ID
-     */
     public void sortDeck()
     {
         Card.resetCounter();
