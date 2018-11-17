@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Stack;
+
 public class GameView extends SurfaceView implements Runnable
 {
     //boolean variable to track if the game is playing or not
@@ -27,9 +29,10 @@ public class GameView extends SurfaceView implements Runnable
 
     // Used for moving cards
     private Card activeCard;
-    private int oldX, oldY, mTakenFrom;
+    private CardStack activeStack = null;
+    private int mTakenFrom;
 
-    private int NUM_FOUNDATIONS = 7;
+    private int NUM_FOUNDATIONS = 5;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
@@ -43,16 +46,17 @@ public class GameView extends SurfaceView implements Runnable
         foundations = new CardStack[NUM_FOUNDATIONS];
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(i, (300*i), ScreenY/4);
+            foundations[i] = new CardStack(i, (ScreenX/30 + (200*i) ), ScreenY/4);
             foundations[i].setBackMap(context);
             for(int j = 0; j < i+1; j++)
             {
                 foundations[i].addCard( mDeck.dealCard() );
             }
-            foundations[i].getTop().turnUp();
+            //foundations[i].getTop().turnUp();
         }
 
         //Set up 4 Piles
+
 
         //Set up 1 Empty Pile
 
@@ -66,15 +70,12 @@ public class GameView extends SurfaceView implements Runnable
     @Override
     public void run()
     {
+        draw();
+
         while (playing)
         {
-            //to update the frame
             update();
-
-            //to draw the frame
-            draw();
-
-            //to control
+            //draw();
             control();
         }
     }
@@ -102,6 +103,9 @@ public class GameView extends SurfaceView implements Runnable
 
             if(activeCard != null)
                 drawCard(activeCard);
+
+            if( activeStack != null )
+                drawCardStack(activeStack);
 
             //Unlocking the canvas
             sHolder.unlockCanvasAndPost(canvas);
@@ -183,30 +187,56 @@ public class GameView extends SurfaceView implements Runnable
                     {
                         foundations[mTakenFrom].addCard(activeCard); // Put the card back
                     }
-
                     activeCard = null;
                 }
+                draw();
                 break;
             case MotionEvent.ACTION_DOWN:
                 for(int i = 0; i < NUM_FOUNDATIONS; i++)
                 {
                     if( !foundations[i].isEmpty() ) // Make sure cardStack is not empty
                     {
-                        if (foundations[i].getTop().getDetectCollision().contains((int) motionEvent.getX(), (int) motionEvent.getY()))
+                        for( int j = 0; j < foundations[i].getSize(); j++ ) // Find the card clicked on
                         {
-                            foundations[i].getTop().turnUp();
-                            activeCard = foundations[i].removeTop();
-                            mTakenFrom = i; // Where did we take the card from
-                            break; // Break For
+                            if (foundations[i].getAt(j).getDetectCollision().contains((int) motionEvent.getX(), (int) motionEvent.getY()))
+                            {
+                                if( foundations[i].getAt(j) == foundations[i].getTop() && !foundations[i].getTop().isFaceUp() )
+                                {
+                                    foundations[i].getTop().turnUp(); // If it is the top Turn it Up
+                                    break; // Break For
+                                }
+                                else if( foundations[i].getAt(j).isFaceUp()  )
+                                {
+                                    // Get the selected card for validation purposes
+                                    activeCard = foundations[i].getAt(j);
+
+                                    activeStack = new CardStack(-1, activeCard.getX(), activeCard.getY());
+                                    activeStack.setBackMap( getContext() );
+
+                                    mTakenFrom = i; // Where did we take the card from
+                                }
+                                else
+                                {
+                                    break; // Break For
+                                }
+                            }
+
+                            if( activeCard != null && activeStack != null ) // Get all Cards Below it as a temp Stack
+                            {
+                                activeStack.addCard( foundations[i].removeAt(j) );
+                            }
                         }
+                        //break;
                     }
                 }
-                break;
+                draw();
+                break; // Break Switch
             case MotionEvent.ACTION_MOVE:
-                if( activeCard != null )
+                if( activeStack != null  )
                 {
-                    activeCard.setLocation( (int)motionEvent.getX(), (int)motionEvent.getY() );
+                    activeStack.setLocation( (int)motionEvent.getX(), (int)motionEvent.getY() );
                 }
+                draw();
                 break;
         }
         return true;
