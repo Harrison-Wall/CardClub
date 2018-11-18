@@ -172,33 +172,12 @@ public class GameView extends SurfaceView implements Runnable
             case MotionEvent.ACTION_UP:
                 if(activeStack != null)
                 {
-                    // Check the Foundations
-                    for(int i = 0; i < NUM_FOUNDATIONS; i++)
+                    int clickX = (int) motionEvent.getX();
+                    int clickY = (int) motionEvent.getY();
+
+                    if( !placeCards( clickX, clickY, NUM_PILES, piles) ) // Check the piles
                     {
-                        // Check if on empty stack
-                        if( (foundations[i].isEmpty()) ) // No Cards on stack
-                        {
-                            if( foundations[i].getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) && activeStack.getAt(0).getValue() == 13 )
-                            {
-                                foundations[i].addStack( activeStack );
-                                mTakenFrom[0] = -1;
-                                mTakenFrom[1] = -1;
-                                break; // Break For
-                            }
-                        }
-                        else
-                        {
-                            if( foundations[i].getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
-                            {
-                                if( isValidPlacement(foundations[i].getTop(), activeCard, foundations[i].getID() ) )// If so -> check valid
-                                {
-                                    foundations[i].addStack( activeStack ); // If so -> add card to stack
-                                    mTakenFrom[0] = -1;
-                                    mTakenFrom[1] = -1;
-                                    break; // Break For
-                                }
-                            }
-                        }
+                        placeCards( clickX,  clickY,  NUM_FOUNDATIONS,  foundations); // Check the Foundations
                     }
 
                     // Put Card(s) Back if needed
@@ -224,6 +203,11 @@ public class GameView extends SurfaceView implements Runnable
 
                     activeCard = null;
                     activeStack = null;
+
+                    // Check for win condition
+                    //draw();
+                    //playing = false;
+
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -236,7 +220,7 @@ public class GameView extends SurfaceView implements Runnable
                 {
                     if( !runOffClicked(clickX, clickY) ) // Check tap runOff
                     {
-                        if( !stacksClicked(clickX, clickY, NUM_PILES, piles) ) // Check the 4 piles
+                        if( !stacksClicked(clickX, clickY, NUM_PILES, piles) ) // Check the piles
                         {
                             stacksClicked(clickX, clickY, NUM_FOUNDATIONS, foundations); // Check the foundations
                         }
@@ -385,8 +369,53 @@ public class GameView extends SurfaceView implements Runnable
         // Check the Foundations
         for(int i = 0; i < arraySize; i++)
         {
+            // Check if on empty stack
+            if( (stacks[i].isEmpty()) ) // No Cards on stack
+            {
+                if( stacks[i].getDetectCollision().contains( pX, pY ) ) // If you are touching thr stack
+                {
+                    if( stacks[i].getID() == 0 && activeStack.getAt(0).getValue() == 13 ) // If it is a foundation and active card is a king
+                    {
+                        retVal = true;
 
+                        stacks[i].addStack( activeStack );
+                        mTakenFrom[0] = -1;
+                        mTakenFrom[1] = -1;
+                        break; // Break For
+                    }
+                    else if( stacks[i].getID() == 1 && activeStack.getAt(0).getValue() == 1 ) // If it is a Pile and active card is an Ace
+                    {
+                        if( activeStack.getSize() == 1 ) // Can only add one card at a time to a pile
+                        {
+                            retVal = true;
 
+                            stacks[i].addStack( activeStack );
+                            mTakenFrom[0] = -1;
+                            mTakenFrom[1] = -1;
+                            break; // Break For
+                        }
+                    }
+
+                }
+            }
+            else // Cards are on the stack
+            {
+                if( stacks[i].getTop().getDetectCollision().contains( pX, pY ) ) // Check if on the top of a stack
+                {
+                    if( isValidPlacement(stacks[i].getTop(), activeCard, stacks[i].getID() ) )// If so -> check valid
+                    {
+                        if( stacks[i].getID() == 0 || activeStack.getSize() == 1 ) // If it is a pile only one card can go on it
+                        {
+                            retVal = true;
+
+                            stacks[i].addStack( activeStack ); // If so -> add card to stack
+                            mTakenFrom[0] = -1;
+                            mTakenFrom[1] = -1;
+                            break; // Break For
+                        }
+                    }
+                }
+            }
         }
 
         return retVal;
