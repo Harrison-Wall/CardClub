@@ -25,7 +25,7 @@ public class GameView extends SurfaceView implements Runnable
     // Used for moving cards
     private Card activeCard;
     private CardStack activeStack = null;
-    private int mTakenFrom;
+    private int[] mTakenFrom = new int[2];
 
     private int NUM_FOUNDATIONS = 7;
     private CardStack[] foundations;
@@ -172,6 +172,7 @@ public class GameView extends SurfaceView implements Runnable
             case MotionEvent.ACTION_UP:
                 if(activeStack != null)
                 {
+                    // Check the Foundations
                     for(int i = 0; i < NUM_FOUNDATIONS; i++)
                     {
                         // Check if on empty stack
@@ -180,7 +181,8 @@ public class GameView extends SurfaceView implements Runnable
                             if( foundations[i].getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) && activeStack.getAt(0).getValue() == 13 )
                             {
                                 foundations[i].addStack( activeStack );
-                                mTakenFrom = -1;
+                                mTakenFrom[0] = -1;
+                                mTakenFrom[1] = -1;
                                 break; // Break For
                             }
                         }
@@ -188,19 +190,36 @@ public class GameView extends SurfaceView implements Runnable
                         {
                             if( foundations[i].getTop().getDetectCollision().contains( (int)motionEvent.getX(), (int)motionEvent.getY() ) ) // Check if on the top of a stack
                             {
-                                if( isValidPlacement(foundations[i].getTop(), activeCard) )// If so -> check valid
+                                if( isValidPlacement(foundations[i].getTop(), activeCard, foundations[i].getID() ) )// If so -> check valid
                                 {
                                     foundations[i].addStack( activeStack ); // If so -> add card to stack
-                                    mTakenFrom = -1;
+                                    mTakenFrom[0] = -1;
+                                    mTakenFrom[1] = -1;
                                     break; // Break For
                                 }
                             }
                         }
                     }
 
-                    if( mTakenFrom >= 0 )
+                    // Put Card(s) Back if needed
+                    if( mTakenFrom[0] >= 0 )
                     {
-                        foundations[mTakenFrom].addStack(activeStack); // Put the card(s) back
+                        switch( mTakenFrom[1] )
+                        {
+                            case 0:
+                                foundations[ mTakenFrom[0] ].addStack(activeStack); // Put the card(s) back
+                                break;
+                            case 1:
+                                piles[ mTakenFrom[0] ].addStack(activeStack);
+                                break;
+                            case 2:
+                                tapRunOff.addStack(activeStack);
+                                break;
+                        }
+
+                        // No Longer Valid
+                        mTakenFrom[0] = -1;
+                        mTakenFrom[1] = -1;
                     }
 
                     activeCard = null;
@@ -252,13 +271,23 @@ public class GameView extends SurfaceView implements Runnable
         }
     }
 
-    public boolean isValidPlacement( Card topCard, Card currCard )
+    public boolean isValidPlacement( Card topCard, Card currCard, int pID )
     {
         boolean retVal = false;
 
-        if( ( topCard.isRed() != currCard.isRed() ) && ( topCard.getValue() == currCard.getValue()+1 ) )
+        if( pID == 0 ) // Foundations
         {
-            retVal = true;
+            if( ( topCard.isRed() != currCard.isRed() ) && ( topCard.getValue() == currCard.getValue()+1 ) )
+            {
+                retVal = true;
+            }
+        }
+        else if( pID == 1 ) // Piles
+        {
+            if( ( topCard.getSuit() == currCard.getSuit() ) && ( topCard.getValue() == currCard.getValue()-1 ) )
+            {
+                retVal = true;
+            }
         }
 
         return retVal;
@@ -302,7 +331,8 @@ public class GameView extends SurfaceView implements Runnable
             {
                 activeCard = tapRunOff.getTop();
                 activeStack = tapRunOff.splitStack( activeCard, getContext() );
-                mTakenFrom = -1;
+                mTakenFrom[0] = 1;
+                mTakenFrom[1] = tapRunOff.getID(); // Taken from the runOff
             }
 
             retVal = true;
@@ -336,7 +366,8 @@ public class GameView extends SurfaceView implements Runnable
                             activeCard  = stacks[i].getAt(j);
                             activeStack = stacks[i].splitStack(activeCard, getContext()); //Get any Cards on top of the selected card
 
-                            mTakenFrom = i; // Where did we take the card from
+                            mTakenFrom[0] = i; // Where did we take the card from
+                            mTakenFrom[1] = stacks[i].getID();
                             break;
                         }
                     }
@@ -347,7 +378,19 @@ public class GameView extends SurfaceView implements Runnable
         return retVal;
     }
 
+    public boolean placeCards(int pX, int pY, int arraySize, CardStack[] stacks)
+    {
+        boolean retVal = false;
 
+        // Check the Foundations
+        for(int i = 0; i < arraySize; i++)
+        {
+
+
+        }
+
+        return retVal;
+    }
 
 
 
