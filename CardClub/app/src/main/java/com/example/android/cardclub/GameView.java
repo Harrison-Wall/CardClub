@@ -33,7 +33,7 @@ public class GameView extends SurfaceView implements Runnable
     private int NUM_PILES = 4;
     private CardStack[] piles;
 
-    private CardStack tapRunOff, tap;
+    private CardStack tap, tapRunOff;
 
     //Class constructor
     public GameView(Context context, int ScreenX, int ScreenY)
@@ -63,12 +63,10 @@ public class GameView extends SurfaceView implements Runnable
         }
 
         //Set up 1 Empty Pile
-
         tapRunOff = new CardStack(2, ScreenX-500, 200, 0, 2000, context);
 
         //Set up 1 Pile with rest of deck
         tap = new CardStack(3, ScreenX-300, 200, 0, 2000, context);
-
         while( mDeck.getCardsDelt() < mDeck.getSize() )
         {
             tap.addCard( mDeck.dealCard() );
@@ -210,29 +208,18 @@ public class GameView extends SurfaceView implements Runnable
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-                for(int i = 0; i < NUM_FOUNDATIONS; i++)
-                {
-                    if( !foundations[i].isEmpty() ) // Make sure cardStack is not empty
-                    {
-                        for( int j = 0; j < foundations[i].getSize(); j++ ) // Find the card clicked on
-                        {
-                            if (foundations[i].getAt(j).getDetectCollision().contains((int) motionEvent.getX(), (int) motionEvent.getY()))
-                            {
-                                if( foundations[i].getAt(j) == foundations[i].getTop() && !foundations[i].getTop().isFaceUp() )
-                                {
-                                    foundations[i].getTop().turnUp(); // If it is the top Turn it Up
-                                    break; // Break For
-                                }
-                                else if( foundations[i].getAt(j).isFaceUp()  )
-                                {
-                                    // Get the selected card for validation purposes
-                                    activeCard  = foundations[i].getAt(j);
-                                    activeStack = foundations[i].splitStack(activeCard, getContext()); //Get any Cards on top of the selected card
+                // Get tap location
+                int clickX = (int) motionEvent.getX();
+                int clickY = (int) motionEvent.getY();
 
-                                    mTakenFrom = i; // Wjere did we take the card from
-                                    break;
-                                }
-                            }
+                // Check all CardStacks
+                if( !tapClicked(clickX, clickY) ) // Check the tap
+                {
+                    if( !runOffClicked(clickX, clickY) ) // Check tap runOff
+                    {
+                        if( !stacksClicked(clickX, clickY, NUM_PILES, piles) ) // Check the 4 piles
+                        {
+                            stacksClicked(clickX, clickY, NUM_FOUNDATIONS, foundations); // Check the foundations
                         }
                     }
                 }
@@ -276,4 +263,92 @@ public class GameView extends SurfaceView implements Runnable
 
         return retVal;
     }
+
+    public boolean tapClicked(int pX, int pY)
+    {
+        boolean retVal = false;
+
+        // Check the tap
+        if( tap.getDetectCollision().contains(pX, pY ) ) // Get all the Cards from the tap runOff
+        {
+            if( tap.isEmpty() )
+            {
+                while (! tapRunOff.isEmpty())
+                {
+                    tapRunOff.getTop().turnDown();
+                    tap.addCard( tapRunOff.removeTop() );
+                }
+
+            }
+            else
+            {
+                tapRunOff.addCard( tap.removeTop() );
+                tapRunOff.getTop().turnUp();
+            }
+
+            retVal = true;
+        }
+
+        return retVal;
+    }
+
+    public boolean runOffClicked(int pX, int pY)
+    {
+        boolean retVal = false;
+
+        if( tapRunOff.getDetectCollision().contains(pX, pY) )
+        {
+            if( !tapRunOff.isEmpty() )
+            {
+                activeCard = tapRunOff.getTop();
+                activeStack = tapRunOff.splitStack( activeCard, getContext() );
+                mTakenFrom = -1;
+            }
+
+            retVal = true;
+        }
+
+        return retVal;
+    }
+
+    public boolean stacksClicked(int pX, int pY, int arraySize, CardStack[] stacks)
+    {
+        boolean retVal = false;
+
+        for(int i = 0; i < arraySize; i++)
+        {
+            if( !stacks[i].isEmpty() ) // Make sure cardStack is not empty
+            {
+                for( int j = 0; j < stacks[i].getSize(); j++ ) // Find the card clicked on
+                {
+                    if (stacks[i].getAt(j).getDetectCollision().contains(pX, pY))
+                    {
+                        retVal = true;
+
+                        if( stacks[i].getAt(j) == stacks[i].getTop() && !stacks[i].getTop().isFaceUp() )
+                        {
+                            stacks[i].getTop().turnUp(); // If it is the top Turn it Up
+                            break; // Break For
+                        }
+                        else if( stacks[i].getAt(j).isFaceUp()  )
+                        {
+                            // Get the selected card for validation purposes
+                            activeCard  = stacks[i].getAt(j);
+                            activeStack = stacks[i].splitStack(activeCard, getContext()); //Get any Cards on top of the selected card
+
+                            mTakenFrom = i; // Where did we take the card from
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return retVal;
+    }
+
+
+
+
+
 }
