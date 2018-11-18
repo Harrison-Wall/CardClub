@@ -54,7 +54,7 @@ public class CardStack
     public void setBackMap(Context context)
     {
         BitmapFactory.Options myOps = new BitmapFactory.Options();
-        myOps.inDensity = 1500;
+        myOps.inDensity = 2000;
 
         mStackMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty_stack, myOps);
 
@@ -64,9 +64,49 @@ public class CardStack
         mDetectCollision.bottom = mY + mOffset + mStackMap.getHeight();
     }
 
-    public Card getAt(int index) { return mCardStack.elementAt(index); }
+    public Card removeAt(int index)
+    {
+        mOffset -= 75;
+        return mCardStack.remove(index);
+    }
+
+    public CardStack splitStack(Card pCard, Context context)
+    {
+        CardStack newStack = new CardStack();
+        newStack.setBackMap(context);
+
+        for(int i = 0; i < mCardStack.size(); ++i)
+        {
+            if(mCardStack.get(i) == pCard)
+            {
+                newStack.setLocation(pCard.getX(), pCard.getY());
+
+                for(; i < mCardStack.size();)
+                {
+                    newStack.addCard( this.removeAt(i) );
+                }
+            }
+        }
+
+        newStack.mID = this.mID;
+
+        return newStack;
+    }
+
+    public void addStack(CardStack pStack)
+    {
+        if( pStack != null )
+        {
+            while( !pStack.isEmpty() )
+            {
+                this.addCard( pStack.removeAt(0) );
+            }
+        }
+    }
 
     // Getters
+    public Card getAt(int index) { return mCardStack.elementAt(index); }
+
     public Bitmap getStackMap() { return mStackMap; }
 
     public Rect getDetectCollision() { return mDetectCollision; }
@@ -91,5 +131,18 @@ public class CardStack
     public void setX(int pX) {mX = pX;}
 
     public void setY(int pY) {mY = pY;}
+
+    public void setLocation(int pX, int pY)
+    {
+        mX = pX;
+        mY = pY;
+        mOffset = 0;
+
+        for( int i = 0; i < mCardStack.size(); i++ )
+        {
+            mCardStack.elementAt(i).setLocation(mX, mY+mOffset);
+            mOffset += 75;
+        }
+    }
 
 }

@@ -51,16 +51,6 @@ public class Deck
         cardsDelt = 0;
     }
 
-
-    public Card getCard (int pIndex)
-    {
-        return deckOfCards.get(pIndex);
-    }
-
-    public int getSize () {return deckSize;}
-
-    public int getCardsDelt() {return cardsDelt;}
-
     public Card dealCard()
     {
         Card retVal;
@@ -179,4 +169,13 @@ public class Deck
             array[51] = R.drawable.s_k;
         }
     }
+
+    public Card getCard (int pIndex)
+    {
+        return deckOfCards.get(pIndex);
+    }
+
+    public int getSize () {return deckSize;}
+
+    public int getCardsDelt() {return cardsDelt;}
 }
