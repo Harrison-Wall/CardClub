@@ -47,8 +47,7 @@ public class GameView extends SurfaceView implements Runnable
         foundations = new CardStack[NUM_FOUNDATIONS];
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(0, (ScreenX/50 + (200*i) ), ScreenY/4); // ID: 0 == Normal Stack
-            foundations[i].setBackMap(context);
+            foundations[i] = new CardStack(0, (ScreenX/50 + (200*i) ), ScreenY/4, 75, 2000, context); // ID: 0 == Normal Stack
             for(int j = 0; j < i+1; j++)
             {
                 foundations[i].addCard( mDeck.dealCard() );
@@ -57,10 +56,23 @@ public class GameView extends SurfaceView implements Runnable
         }
 
         //Set up 4 Piles
+        piles = new CardStack[NUM_PILES];
+        for( int i = 0; i < NUM_PILES; i++ )
+        {
+            piles[i] = new CardStack(1, 200*i, 200, 0, 2000, context); // ID: 0 = Pile Stack
+        }
 
         //Set up 1 Empty Pile
 
+        tapRunOff = new CardStack(2, ScreenX-500, 200, 0, 2000, context);
+
         //Set up 1 Pile with rest of deck
+        tap = new CardStack(3, ScreenX-300, 200, 0, 2000, context);
+
+        while( mDeck.getCardsDelt() < mDeck.getSize() )
+        {
+            tap.addCard( mDeck.dealCard() );
+        }
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -98,6 +110,14 @@ public class GameView extends SurfaceView implements Runnable
             {
                 drawCardStack( foundations[i] );
             }
+
+            for(int i = 0; i < NUM_PILES; i++)
+            {
+                drawCardStack( piles[i] );
+            }
+
+            drawCardStack( tap );
+            drawCardStack( tapRunOff );
 
             if(activeCard != null)
                 drawCard(activeCard);

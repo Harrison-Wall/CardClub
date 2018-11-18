@@ -10,7 +10,7 @@ import java.util.Stack;
 
 public class CardStack
 {
-    private int mID, mOffset, mX, mY;
+    private int mID, mOffset, mX, mY, mOffAmount, mDensity;
     private Stack<Card> mCardStack;
 
     private Bitmap mStackMap;
@@ -20,20 +20,27 @@ public class CardStack
     {
         mID = 0;
         mOffset = 0;
+        mOffAmount = 75;
         mX = 0;
         mY = 0;
+        mDensity = 2000;
+
         mCardStack = new Stack<Card>( );
         mDetectCollision = new Rect();
     }
 
-    public CardStack(int pID, int pX, int pY)
+    public CardStack(int pID, int pX, int pY, int pOffAmount, int pDensity, Context context)
     {
         mID = pID;
         mOffset = 0;
+        mOffAmount = pOffAmount;
         mX = pX;
         mY = pY;
+        mDensity = pDensity;
+
         mCardStack = new Stack<Card>( );
         mDetectCollision = new Rect();
+        setBackMap(context, mDensity);
     }
 
     public void addCard(Card pCard)
@@ -42,19 +49,19 @@ public class CardStack
 
         mCardStack.push(pCard);
 
-        mOffset += 75;
+        mOffset += mOffAmount;
     }
 
     public Card removeTop()
     {
-        mOffset -= 75;
+        mOffset -= mOffAmount;
         return mCardStack.pop();
     }
 
-    public void setBackMap(Context context)
+    public void setBackMap(Context context, int density)
     {
         BitmapFactory.Options myOps = new BitmapFactory.Options();
-        myOps.inDensity = 2000;
+        myOps.inDensity = density;
 
         mStackMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.empty_stack, myOps);
 
@@ -66,14 +73,14 @@ public class CardStack
 
     public Card removeAt(int index)
     {
-        mOffset -= 75;
+        mOffset -= mOffAmount;
         return mCardStack.remove(index);
     }
 
     public CardStack splitStack(Card pCard, Context context)
     {
         CardStack newStack = new CardStack();
-        newStack.setBackMap(context);
+        newStack.setBackMap(context, mDensity);
 
         for(int i = 0; i < mCardStack.size(); ++i)
         {
@@ -125,12 +132,16 @@ public class CardStack
 
     public int getY() {return  mY;}
 
+    public int getOffAmount() { return mOffAmount; }
+
     // Setters
     public void setOffset(int pOff) {mOffset = pOff;}
 
     public void setX(int pX) {mX = pX;}
 
     public void setY(int pY) {mY = pY;}
+
+    public void setOffAmount( int pAmount ) { mOffAmount = pAmount; }
 
     public void setLocation(int pX, int pY)
     {
@@ -141,7 +152,7 @@ public class CardStack
         for( int i = 0; i < mCardStack.size(); i++ )
         {
             mCardStack.elementAt(i).setLocation(mX, mY+mOffset);
-            mOffset += 75;
+            mOffset += mOffAmount;
         }
     }
 
