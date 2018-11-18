@@ -70,6 +70,40 @@ public class CardStack
         return mCardStack.remove(index);
     }
 
+    public CardStack splitStack(Card pCard, Context context)
+    {
+        CardStack newStack = new CardStack();
+        newStack.setBackMap(context);
+
+        for(int i = 0; i < mCardStack.size(); ++i)
+        {
+            if(mCardStack.get(i) == pCard)
+            {
+                newStack.setLocation(pCard.getX(), pCard.getY());
+
+                for(; i < mCardStack.size();)
+                {
+                    newStack.addCard( this.removeAt(i) );
+                }
+            }
+        }
+
+        newStack.mID = this.mID;
+
+        return newStack;
+    }
+
+    public void addStack(CardStack pStack)
+    {
+        if( pStack != null )
+        {
+            while( !pStack.isEmpty() )
+            {
+                this.addCard( pStack.removeAt(0) );
+            }
+        }
+    }
+
     // Getters
     public Card getAt(int index) { return mCardStack.elementAt(index); }
 
