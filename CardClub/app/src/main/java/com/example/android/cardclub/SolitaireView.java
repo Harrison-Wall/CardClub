@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -46,6 +47,8 @@ public class SolitaireView extends SurfaceView implements Runnable
     public SolitaireView(Context context, int pScreenX, int pScreenY)
     {
         super(context);
+
+        Log.v("Solitaire View", "ScreenX = " + pScreenX + " ScrrenY = " + pScreenY);
 
         foundations = new CardStack[NUM_FOUNDATIONS];
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
@@ -206,10 +209,10 @@ public class SolitaireView extends SurfaceView implements Runnable
 
                     if( hasWon() ) // If all Piles are Full
                     {
-
                         // Show and Alert Message
                         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext());
                         alertBuilder.setMessage("You Won!");
+
                         alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
                         {
                             @Override
@@ -217,14 +220,6 @@ public class SolitaireView extends SurfaceView implements Runnable
                             {
                                 clearBoard();
                                 fillBoard( getContext() );
-                            }
-                        });
-
-                        alertBuilder.setNegativeButton("Home", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
                             }
                         });
 
@@ -265,15 +260,15 @@ public class SolitaireView extends SurfaceView implements Runnable
     public void fillBoard(Context context)
     {
         mDeck = new Deck(context); // Create the Deck of Cards
-        //mDeck.shuffleDeck();
+        mDeck.shuffleDeck();
 
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
             for(int j = 0; j < i+1; j++)
             {
-                //foundations[i].addCard( mDeck.dealCard() );
+                foundations[i].addCard( mDeck.dealCard() );
             }
-            //foundations[i].getTop().turnUp();
+            foundations[i].getTop().turnUp();
         }
 
         while( mDeck.getCardsDelt() < mDeck.getSize() )
@@ -295,6 +290,9 @@ public class SolitaireView extends SurfaceView implements Runnable
         {
             foundations[i].clearStack();
         }
+
+        tap.clearStack();
+        tapRunOff.clearStack();
 
         mDeck.sortDeck();
 
