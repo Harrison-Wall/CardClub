@@ -16,7 +16,7 @@ import com.example.android.cardclub.R;
         int w=getWindowManager().getDefaultDisplay().getWidth()-25;
         int h=getWindowManager().getDefaultDisplay().getHeight()-25;
 
-        GameView gView = new GameView(this, w, h);
+        SolitaireView gView = new SolitaireView(this, w, h);
         setContentView(gView);
  */
 

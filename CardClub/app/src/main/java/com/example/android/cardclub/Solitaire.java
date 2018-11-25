@@ -8,7 +8,7 @@ import android.view.Display;
 public class Solitaire extends Activity
 {
     //declaring gameview
-    private GameView gameView;
+    private SolitaireView solitaireView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -23,10 +23,11 @@ public class Solitaire extends Activity
         display.getSize(size);
 
         //Initializing game view object
-        gameView = new GameView(this, size.x, size.y);
+        solitaireView = new SolitaireView(this, size.x, size.y);
 
-        //adding it to contentview
-        setContentView(gameView);
+        //adding it to ContentView
+        setContentView(solitaireView);
+
     }
 
     //pausing the game when activity is paused
@@ -34,7 +35,7 @@ public class Solitaire extends Activity
     protected void onPause()
     {
         super.onPause();
-        gameView.pause();
+        solitaireView.pause();
     }
 
     //running the game when activity is resumed
@@ -42,6 +43,6 @@ public class Solitaire extends Activity
     protected void onResume()
     {
         super.onResume();
-        gameView.resume();
+        solitaireView.resume();
     }
 }

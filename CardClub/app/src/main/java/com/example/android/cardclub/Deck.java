@@ -101,6 +101,8 @@ public class Deck
         {
             deckOfCards.add( new Card( ((i%13)+1), (i/13), false) );
         }
+
+        cardsDelt = 0;
     }
 
     public void addResources(int array[])

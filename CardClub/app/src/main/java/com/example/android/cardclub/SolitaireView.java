@@ -1,17 +1,21 @@
 package com.example.android.cardclub;
 
 // Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
-public class GameView extends SurfaceView implements Runnable
+public class SolitaireView extends SurfaceView implements Runnable
 {
     //boolean variable to track if the game is playing or not
     volatile boolean playing;
@@ -25,6 +29,7 @@ public class GameView extends SurfaceView implements Runnable
     private SurfaceHolder sHolder;
 
     // Used for moving cards
+    private Deck mDeck;
     private Card activeCard;
     private CardStack activeStack = null;
     private int[] mTakenFrom = new int[2];
@@ -38,23 +43,14 @@ public class GameView extends SurfaceView implements Runnable
     private CardStack tap, tapRunOff;
 
     //Class constructor
-    public GameView(Context context, int ScreenX, int ScreenY)
+    public SolitaireView(Context context, int pScreenX, int pScreenY)
     {
         super(context);
 
-        Deck mDeck = new Deck(context); // Create the Deck of Cards
-        //mDeck.shuffleDeck();
-
-        // Set up 7 Foundations
         foundations = new CardStack[NUM_FOUNDATIONS];
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(0, (ScreenX/50 + (200*i) ), ScreenY/4, 100, 2000, context); // ID: 0 == Normal Stack
-            for(int j = 0; j < i+1; j++)
-            {
-                //foundations[i].addCard( mDeck.dealCard() );
-            }
-            //foundations[i].getTop().turnUp();
+            foundations[i] = new CardStack(0, (pScreenX/50 + (200*i) ), pScreenY/4, 100, 2000, context); // ID: 0 == Normal Stack
         }
 
         //Set up 4 Piles
@@ -65,14 +61,12 @@ public class GameView extends SurfaceView implements Runnable
         }
 
         //Set up 1 Empty Pile
-        tapRunOff = new CardStack(2, ScreenX-500, 200, 0, 2000, context);
+        tapRunOff = new CardStack(2, pScreenX-500, 200, 0, 2000, context);
 
         //Set up 1 Pile with rest of deck
-        tap = new CardStack(3, ScreenX-300, 200, 0, 2000, context);
-        while( mDeck.getCardsDelt() < mDeck.getSize() )
-        {
-            tap.addCard( mDeck.dealCard() );
-        }
+        tap = new CardStack(3, pScreenX-300, 200, 0, 2000, context);
+
+        fillBoard(context);
 
         // Set up paint. surface etc
         sHolder = getHolder();
@@ -186,9 +180,6 @@ public class GameView extends SurfaceView implements Runnable
                         placeCards( clickX,  clickY,  NUM_FOUNDATIONS,  foundations); // Check the Foundations
                     }
 
-                    if( hasWon() )
-                        Toast.makeText(getContext(), "You Won!", Toast.LENGTH_LONG).show();
-
                     // Put Card(s) Back if needed
                     if( mTakenFrom[0] >= 0 )
                     {
@@ -208,12 +199,39 @@ public class GameView extends SurfaceView implements Runnable
                         // No Longer Valid
                         mTakenFrom[0] = -1;
                         mTakenFrom[1] = -1;
-
-
                     }
 
                     activeCard = null;
                     activeStack = null;
+
+                    if( hasWon() ) // If all Piles are Full
+                    {
+
+                        // Show and Alert Message
+                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext());
+                        alertBuilder.setMessage("You Won!");
+                        alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                clearBoard();
+                                fillBoard( getContext() );
+                            }
+                        });
+
+                        alertBuilder.setNegativeButton("Home", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                            }
+                        });
+
+                        AlertDialog myAlert = alertBuilder.create();
+                        myAlert.show();
+                    }
+
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -244,7 +262,44 @@ public class GameView extends SurfaceView implements Runnable
     }
 
 
+    public void fillBoard(Context context)
+    {
+        mDeck = new Deck(context); // Create the Deck of Cards
+        //mDeck.shuffleDeck();
 
+        for( int i = 0; i < NUM_FOUNDATIONS; i++ )
+        {
+            for(int j = 0; j < i+1; j++)
+            {
+                //foundations[i].addCard( mDeck.dealCard() );
+            }
+            //foundations[i].getTop().turnUp();
+        }
+
+        while( mDeck.getCardsDelt() < mDeck.getSize() )
+        {
+            tap.addCard( mDeck.dealCard() );
+        }
+
+        return;
+    }
+
+    public void clearBoard()
+    {
+        for(int i = 0; i < NUM_PILES; i++)
+        {
+            piles[i].clearStack();
+        }
+
+        for(int i = 0; i < NUM_FOUNDATIONS; i++)
+        {
+            foundations[i].clearStack();
+        }
+
+        mDeck.sortDeck();
+
+        return;
+    }
 
 
     public void drawCard( Card pCard )
@@ -476,5 +531,6 @@ public class GameView extends SurfaceView implements Runnable
 
         return retVal;
     }
+
 
 }

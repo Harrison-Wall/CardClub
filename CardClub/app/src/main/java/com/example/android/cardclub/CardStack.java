@@ -111,6 +111,8 @@ public class CardStack
         }
     }
 
+    public void clearStack() { mCardStack.clear(); }
+
     // Getters
     public Card getAt(int index) { return mCardStack.elementAt(index); }
 
