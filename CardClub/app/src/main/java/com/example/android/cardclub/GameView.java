@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -42,25 +43,25 @@ public class GameView extends SurfaceView implements Runnable
         super(context);
 
         Deck mDeck = new Deck(context); // Create the Deck of Cards
-        mDeck.shuffleDeck();
+        //mDeck.shuffleDeck();
 
         // Set up 7 Foundations
         foundations = new CardStack[NUM_FOUNDATIONS];
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(0, (ScreenX/50 + (200*i) ), ScreenY/4, 75, 2000, context); // ID: 0 == Normal Stack
+            foundations[i] = new CardStack(0, (ScreenX/50 + (200*i) ), ScreenY/4, 100, 2000, context); // ID: 0 == Normal Stack
             for(int j = 0; j < i+1; j++)
             {
-                foundations[i].addCard( mDeck.dealCard() );
+                //foundations[i].addCard( mDeck.dealCard() );
             }
-            foundations[i].getTop().turnUp();
+            //foundations[i].getTop().turnUp();
         }
 
         //Set up 4 Piles
         piles = new CardStack[NUM_PILES];
         for( int i = 0; i < NUM_PILES; i++ )
         {
-            piles[i] = new CardStack(1, 200*i, 200, 0, 2000, context); // ID: 0 = Pile Stack
+            piles[i] = new CardStack(1, 50 + (200*i), 200, 0, 2000, context); // ID: 0 = Pile Stack
         }
 
         //Set up 1 Empty Pile
@@ -132,9 +133,6 @@ public class GameView extends SurfaceView implements Runnable
         gameThread.start();
     }
 
-
-
-
     private void draw()
     {
         //checking if surface is valid
@@ -172,7 +170,6 @@ public class GameView extends SurfaceView implements Runnable
 
 
 
-
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent)
     {
@@ -188,6 +185,9 @@ public class GameView extends SurfaceView implements Runnable
                     {
                         placeCards( clickX,  clickY,  NUM_FOUNDATIONS,  foundations); // Check the Foundations
                     }
+
+                    if( hasWon() )
+                        Toast.makeText(getContext(), "You Won!", Toast.LENGTH_LONG).show();
 
                     // Put Card(s) Back if needed
                     if( mTakenFrom[0] >= 0 )
@@ -208,16 +208,12 @@ public class GameView extends SurfaceView implements Runnable
                         // No Longer Valid
                         mTakenFrom[0] = -1;
                         mTakenFrom[1] = -1;
+
+
                     }
 
                     activeCard = null;
                     activeStack = null;
-
-                    // Check for win condition
-                    if( hasWon() )
-                    {
-                        Toast.makeText(getContext(), "Congrats", Toast.LENGTH_LONG);
-                    }
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -305,7 +301,7 @@ public class GameView extends SurfaceView implements Runnable
         {
             if( tap.isEmpty() )
             {
-                while (! tapRunOff.isEmpty())
+                while ( !tapRunOff.isEmpty() )
                 {
                     tapRunOff.getTop().turnDown();
                     tap.addCard( tapRunOff.removeTop() );
@@ -449,14 +445,17 @@ public class GameView extends SurfaceView implements Runnable
 
 
 
-    boolean hasWon()
+    public boolean hasWon()
     {
         boolean retVal = true;
 
         for( int i = 0; i < NUM_PILES; i++ )
         {
             if( piles[i].getSize() != 13 )
+            {
                 retVal = false;
+                break;
+            }
         }
 
         return retVal;
