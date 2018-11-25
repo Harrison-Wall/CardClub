@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.util.Log;
 
 import java.util.Stack;
 
@@ -23,7 +22,7 @@ public class CardStack
         mOffAmount = 75;
         mX = 0;
         mY = 0;
-        mDensity = 2000;
+        mDensity = 0;
 
         mCardStack = new Stack<Card>( );
         mDetectCollision = new Rect();

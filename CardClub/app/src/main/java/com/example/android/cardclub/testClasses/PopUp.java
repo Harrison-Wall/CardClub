@@ -14,7 +14,7 @@ public class PopUp extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.popup_window);
+        //setContentView(R.layout.popup_window);
 
         //Getting display object
         Display display = getWindowManager().getDefaultDisplay();

@@ -4,17 +4,12 @@ package com.example.android.cardclub;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 public class SolitaireView extends SurfaceView implements Runnable
 {
@@ -35,6 +30,7 @@ public class SolitaireView extends SurfaceView implements Runnable
     private CardStack activeStack = null;
     private int[] mTakenFrom = new int[2];
 
+    // The Various stacks needed for solitaire
     private int NUM_FOUNDATIONS = 7;
     private CardStack[] foundations;
 
@@ -43,31 +39,35 @@ public class SolitaireView extends SurfaceView implements Runnable
 
     private CardStack tap, tapRunOff;
 
-    //Class constructor
     public SolitaireView(Context context, int pScreenX, int pScreenY)
     {
         super(context);
 
-        Log.v("Solitaire View", "ScreenX = " + pScreenX + " ScrrenY = " + pScreenY);
+        // Calculate spacing / layout
+        int density = (int)Math.sqrt(pScreenX*pScreenY); // 2000
+        int offAmount = pScreenY/25;                     // 100
+        int topY = pScreenY/12;                          // 200
+        int bottomY = pScreenY/4;                        // 640
+        int xOffset = pScreenX/50;                       // 50
 
         foundations = new CardStack[NUM_FOUNDATIONS];
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(0, (pScreenX/50 + (200*i) ), pScreenY/4, 100, 2000, context); // ID: 0 == Normal Stack
+            foundations[i] = new CardStack(0, (xOffset + (200*i) ), bottomY, offAmount, density, context); // ID: 0 == Normal Stack
         }
 
         //Set up 4 Piles
         piles = new CardStack[NUM_PILES];
         for( int i = 0; i < NUM_PILES; i++ )
         {
-            piles[i] = new CardStack(1, 50 + (200*i), 200, 0, 2000, context); // ID: 0 = Pile Stack
+            piles[i] = new CardStack(1, xOffset + (200*i), topY, 0, density, context); // ID: 0 = Pile Stack
         }
 
         //Set up 1 Empty Pile
-        tapRunOff = new CardStack(2, pScreenX-500, 200, 0, 2000, context);
+        tapRunOff = new CardStack(2, pScreenX-500, topY, 0, density, context);
 
         //Set up 1 Pile with rest of deck
-        tap = new CardStack(3, pScreenX-300, 200, 0, 2000, context);
+        tap = new CardStack(3, pScreenX-300, topY, 0, density, context);
 
         fillBoard(context);
 
@@ -209,24 +209,8 @@ public class SolitaireView extends SurfaceView implements Runnable
 
                     if( hasWon() ) // If all Piles are Full
                     {
-                        // Show and Alert Message
-                        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext());
-                        alertBuilder.setMessage("You Won!");
-
-                        alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                clearBoard();
-                                fillBoard( getContext() );
-                            }
-                        });
-
-                        AlertDialog myAlert = alertBuilder.create();
-                        myAlert.show();
+                        showAlert();
                     }
-
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
@@ -319,7 +303,27 @@ public class SolitaireView extends SurfaceView implements Runnable
     }
 
 
+    public void showAlert()
+    {
+        // Show and Alert Message https://www.tutorialspoint.com/android/android_alert_dialoges.html
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext());
+        alertBuilder.setMessage("You Won!");
 
+        alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                clearBoard();
+                fillBoard( getContext() );
+            }
+        });
+
+        AlertDialog myAlert = alertBuilder.create();
+        myAlert.show();
+
+        return;
+    }
 
     public boolean isValidPlacement( Card topCard, Card currCard, int pID )
     {
