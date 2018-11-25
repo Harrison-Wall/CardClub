@@ -352,26 +352,42 @@ public class GameView extends SurfaceView implements Runnable
         {
             if( !stacks[i].isEmpty() ) // Make sure cardStack is not empty
             {
-                for( int j = 0; j < stacks[i].getSize(); j++ ) // Find the card clicked on
+                // If it is a pile, take it from the top
+                if( stacks[i].getID() == 1 )
                 {
-                    if (stacks[i].getAt(j).getDetectCollision().contains(pX, pY))
+                    if( stacks[i].getDetectCollision().contains( pX, pY ) )
                     {
-                        retVal = true;
+                        activeCard  = stacks[i].getTop();
+                        activeStack = stacks[i].splitStack(activeCard, getContext()); //Get any Cards on top of the selected card
 
-                        if( stacks[i].getAt(j) == stacks[i].getTop() && !stacks[i].getTop().isFaceUp() )
+                        mTakenFrom[0] = i; // Where did we take the card from
+                        mTakenFrom[1] = stacks[i].getID();
+                        break;
+                    }
+                }
+                else
+                {
+                    for( int j = 0; j < stacks[i].getSize(); j++ ) // Find the card clicked on
+                    {
+                        if (stacks[i].getAt(j).getDetectCollision().contains(pX, pY))
                         {
-                            stacks[i].getTop().turnUp(); // If it is the top Turn it Up
-                            break; // Break For
-                        }
-                        else if( stacks[i].getAt(j).isFaceUp()  )
-                        {
-                            // Get the selected card for validation purposes
-                            activeCard  = stacks[i].getAt(j);
-                            activeStack = stacks[i].splitStack(activeCard, getContext()); //Get any Cards on top of the selected card
+                            retVal = true;
 
-                            mTakenFrom[0] = i; // Where did we take the card from
-                            mTakenFrom[1] = stacks[i].getID();
-                            break;
+                            if( stacks[i].getAt(j) == stacks[i].getTop() && !stacks[i].getTop().isFaceUp() )
+                            {
+                                stacks[i].getTop().turnUp(); // If it is the top Turn it Up
+                                break; // Break For
+                            }
+                            else if( stacks[i].getAt(j).isFaceUp()  )
+                            {
+                                // Get the selected card for validation purposes
+                                activeCard  = stacks[i].getAt(j);
+                                activeStack = stacks[i].splitStack(activeCard, getContext()); //Get any Cards on top of the selected card
+
+                                mTakenFrom[0] = i; // Where did we take the card from
+                                mTakenFrom[1] = stacks[i].getID();
+                                break;
+                            }
                         }
                     }
                 }
