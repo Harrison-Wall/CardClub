@@ -164,7 +164,10 @@ public class SolitaireView extends SurfaceView implements Runnable
     }
 
 
-
+    public boolean isRunning()
+    {
+        return playing;
+    }
 
 
     @Override

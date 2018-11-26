@@ -27,7 +27,6 @@ public class Solitaire extends Activity
 
         //adding it to ContentView
         setContentView(solitaireView);
-
     }
 
     //pausing the game when activity is paused
