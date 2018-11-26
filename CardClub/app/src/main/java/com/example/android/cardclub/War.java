@@ -14,13 +14,12 @@ import java.util.Stack;
 public class War extends Activity
 {
     private Deck mDeck;
-    private int userCardCount = 0, opponentCardCount = 0;
 
     private Stack<Card> userStack;
     private Queue<Card> userQueue; // Change to Queue
 
     private Stack<Card> opponentStack;
-    private Queue<Card> oppnentQuque; // Change to Queue
+    private Queue<Card> oppnentQueue; // Change to Queue
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,46 +34,99 @@ public class War extends Activity
         userStack = new Stack<Card>();
         userQueue = new LinkedList<Card>();
         opponentStack = new Stack<Card>();
-        oppnentQuque = new LinkedList<Card>();
+        oppnentQueue = new LinkedList<Card>();
 
         int halfDeck = mDeck.getSize()/2;
 
         for(int i = 0; i <halfDeck; i++)
         {
             userQueue.add( mDeck.dealCard() );
-            userCardCount++;
         }
 
         for(int i = 0; i <halfDeck; i++)
         {
-            oppnentQuque.add( mDeck.dealCard() );
-            opponentCardCount++;
+            oppnentQueue.add( mDeck.dealCard() );
         }
     }
 
     public void drawCards(View view)
     {
-        if( !userQueue.isEmpty() )
+        if( !userQueue.isEmpty() && !oppnentQueue.isEmpty() )
         {
+            // Take a card from the user
             userStack.push( userQueue.poll() );
-            userCardCount--;
-
             updateUserCard( userStack.peek() );
-            updateUserScoreCount( userCardCount );
-            updateUserStackCount( userStack.size() );
-        }
 
-        if( !oppnentQuque.isEmpty() )
-        {
-            opponentStack.push( oppnentQuque.poll() );
-            opponentCardCount--;
-
+            // Take a card from the AI
+            opponentStack.push( oppnentQueue.poll() );
             updateOpponentCard( opponentStack.peek() );
-            updateOpponentScoreCount( opponentCardCount );
-            updateOpponentStackCount( opponentStack.size() );
+
+            //Compare to find the winner
+            switch( compareCards( userStack.peek(), opponentStack.peek() ) )
+            {
+                case 1: // User wins Round
+                    {
+                        Toast mWinner = Toast.makeText(this, "Round Won", Toast.LENGTH_SHORT);
+                        mWinner.show();
+
+                        // Add Cards to User Pile
+                        userQueue.addAll( userStack );
+                        userQueue.addAll( opponentStack );
+                        userStack.clear();
+                        opponentStack.clear();
+
+                        updateUserScoreCount( userQueue.size() );
+                        updateUserStackCount( userStack.size() );
+
+                        updateOpponentScoreCount( oppnentQueue.size() );
+                        updateOpponentStackCount( opponentStack.size() );
+                    }
+                    break;
+                case 0: // Tie Round
+                    {
+                        Toast mWinner = Toast.makeText(this, "Round Tie", Toast.LENGTH_SHORT);
+                        mWinner.show();
+                    }
+                    break;
+                case -1: // AI wind Round
+                    {
+                        Toast mWinner = Toast.makeText(this, "Round Lost", Toast.LENGTH_SHORT);
+                        mWinner.show();
+
+                        // Add Cards to AI Pile
+                        oppnentQueue.addAll( userStack );
+                        oppnentQueue.addAll( opponentStack );
+                        userStack.clear();
+                        opponentStack.clear();
+
+                        updateUserScoreCount( userQueue.size() );
+                        updateUserStackCount( userStack.size() );
+
+                        updateOpponentScoreCount( oppnentQueue.size() );
+                        updateOpponentStackCount( opponentStack.size() );
+                    }
+                    break;
+                default: // Shouldn't Occur
+                    break;
+            }
         }
+        else if( userQueue.isEmpty() )
+        {
+            // AI Wins
+            Toast mWinner = Toast.makeText(this, "Game Lost.", Toast.LENGTH_LONG);
+            mWinner.show();
 
+            // TODO: Change to an Alert Dialogue
 
+        }
+        else if( oppnentQueue.isEmpty() )
+        {
+            // User Wins
+            Toast mWinner = Toast.makeText(this, "Game Won.", Toast.LENGTH_LONG);
+            mWinner.show();
+
+            // TODO: Change to an Alert Dialogue
+        }
 
         return;
     }
@@ -127,5 +179,22 @@ public class War extends Activity
         opponentScoreCount.setText( ""+pCount );
 
         return;
+    }
+
+    // <0 is A won, 0 if tie, >0 if B won
+    public int compareCards(Card pCardA, Card pCardB)
+    {
+        int retVal = 0;
+
+        if( pCardA.getValue() > pCardB.getValue() )
+        {
+            retVal = -1;
+        }
+        else if ( pCardB.getValue() > pCardA.getValue() )
+        {
+            retVal = 1;
+        }
+
+        return retVal;
     }
 }
