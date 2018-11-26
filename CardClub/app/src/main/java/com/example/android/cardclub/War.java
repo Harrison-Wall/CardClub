@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class War extends Activity
@@ -15,9 +17,10 @@ public class War extends Activity
     private int userCardCount = 0, opponentCardCount = 0;
 
     private Stack<Card> userStack;
-    private Stack<Card> userPile;
+    private Queue<Card> userQueue; // Change to Queue
+
     private Stack<Card> opponentStack;
-    private Stack<Card> oppnentPile;
+    private Queue<Card> oppnentQuque; // Change to Queue
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,54 +33,47 @@ public class War extends Activity
         mDeck.shuffleDeck();
 
         userStack = new Stack<Card>();
-        userPile = new Stack<Card>();
+        userQueue = new LinkedList<Card>();
         opponentStack = new Stack<Card>();
-        oppnentPile = new Stack<Card>();
+        oppnentQuque = new LinkedList<Card>();
 
         int halfDeck = mDeck.getSize()/2;
 
         for(int i = 0; i <halfDeck; i++)
         {
-            userPile.push( mDeck.dealCard() );
+            userQueue.add( mDeck.dealCard() );
             userCardCount++;
         }
 
         for(int i = 0; i <halfDeck; i++)
         {
-            oppnentPile.push( mDeck.dealCard() );
+            oppnentQuque.add( mDeck.dealCard() );
             opponentCardCount++;
         }
     }
 
     public void drawCards(View view)
     {
-        if( !userPile.empty() )
+        if( !userQueue.isEmpty() )
         {
-            userStack.push( userPile.pop() );
+            userStack.push( userQueue.poll() );
             userCardCount--;
 
             updateUserCard( userStack.peek() );
             updateUserScoreCount( userCardCount );
             updateUserStackCount( userStack.size() );
         }
-        else
-        {
-            return;
-        }
 
-        if( !oppnentPile.empty() )
+        if( !oppnentQuque.isEmpty() )
         {
-            opponentStack.push( oppnentPile.pop() );
+            opponentStack.push( oppnentQuque.poll() );
             opponentCardCount--;
 
             updateOpponentCard( opponentStack.peek() );
             updateOpponentScoreCount( opponentCardCount );
             updateOpponentStackCount( opponentStack.size() );
         }
-        else
-        {
-            return;
-        }
+
 
 
         return;
