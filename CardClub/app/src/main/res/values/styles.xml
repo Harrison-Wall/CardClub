@@ -20,8 +20,9 @@
         <item name="android:textAlignment" tools:targetApi="17">center</item>
     </style>
 
-    <style name="sdad">
-
+    <style name="testStyle">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
 </resources>

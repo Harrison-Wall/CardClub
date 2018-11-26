@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:padding="16dp">
 
     <RelativeLayout
         android:id="@+id/stacks"
@@ -16,14 +16,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Your Stack: 1"/>
+            style="@style/testStyle"
+            android:text="Your Stack: 1" />
 
         <TextView
             android:id="@+id/ai_stack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Opponent Stack: 1"/>
+            style="@style/testStyle"
+            android:text="AI Stack: 1" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -34,16 +36,16 @@
         <ImageView
             android:id="@+id/user_card"
             android:layout_width="150dp"
-            android:layout_height="350dp"
+            android:layout_height="300dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/red_back" />
 
         <ImageView
             android:id="@+id/ai_card"
             android:layout_width="150dp"
-            android:layout_height="350dp"
+            android:layout_height="300dp"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/blue_back"/>
+            android:src="@drawable/blue_back" />
 
     </RelativeLayout>
 
@@ -57,14 +59,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Your Cards: 26"/>
+            style="@style/testStyle"
+            android:text="Your Cards: 26" />
 
         <TextView
             android:id="@+id/ai_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Opponent Cards: 26"/>
+            style="@style/testStyle"
+            android:text="AI Cards: 26" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -75,7 +79,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Draw"/>
+            android:layout_marginTop="16dp"
+            android:text="Draw" />
 
     </RelativeLayout>
 
