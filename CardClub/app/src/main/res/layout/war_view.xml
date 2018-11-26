@@ -17,15 +17,32 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             style="@style/testStyle"
-            android:text="Your Stack: 0" />
+            android:text="Your Stack: " />
+
+        <TextView
+            android:id="@+id/user_stack_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/testStyle"
+            android:layout_toRightOf="@id/user_stack"
+            android:text="0"/>
 
         <TextView
             android:id="@+id/ai_stack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:paddingLeft="0dp"
+            android:layout_toLeftOf="@+id/ai_stack_count"
             style="@style/testStyle"
-            android:text="AI Stack: 0" />
+            android:text="AI Stack: " />
+
+        <TextView
+            android:id="@+id/ai_stack_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/testStyle"
+            android:layout_alignParentRight="true"
+            android:text="0"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -55,20 +72,36 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/user_score"
+            android:id="@+id/your_cards"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             style="@style/testStyle"
-            android:text="Your Cards: 26" />
+            android:text="Your Cards: " />
 
         <TextView
-            android:id="@+id/ai_score"
+            android:id="@+id/user_card_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             style="@style/testStyle"
-            android:text="AI Cards: 26" />
+            android:text="26"
+            android:layout_toRightOf="@id/your_cards"/>
+
+        <TextView
+            android:id="@+id/ai_cards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/ai_card_count"
+            style="@style/testStyle"
+            android:text="AI Cards: " />
+
+        <TextView
+            android:id="@+id/ai_card_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/testStyle"
+            android:layout_alignParentRight="true"
+            android:text="26" />
     </RelativeLayout>
 
     <RelativeLayout

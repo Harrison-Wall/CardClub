@@ -2,6 +2,7 @@ package com.example.android.cardclub;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,7 +48,7 @@ public class War extends Activity
         }
     }
 
-    public void drawCards()
+    public void drawCards(View view)
     {
         userStack.push( userPile.pop() );
         userCardCount--;
@@ -65,6 +66,13 @@ public class War extends Activity
         ImageView userCard = (ImageView) findViewById( R.id.user_card );
 
         userCard.setImageResource( pCard.getFaceID() );
+
+        return;
+    }
+
+    public void updateUserCount(int pCount)
+    {
+
 
         return;
     }

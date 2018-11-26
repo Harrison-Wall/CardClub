@@ -22,6 +22,10 @@
             android:label="Solitaire">
         </activity>
 
+        <activity android:name=".War"
+            android:label="War">
+        </activity>
+
     </application>
 
 </manifest>
