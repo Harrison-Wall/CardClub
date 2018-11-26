@@ -86,6 +86,10 @@ public class War extends Activity
                     {
                         Toast mWinner = Toast.makeText(this, "Round Tie", Toast.LENGTH_SHORT);
                         mWinner.show();
+
+                        //Update Stack size
+                        updateUserStackCount( userStack.size() );
+                        updateOpponentStackCount( opponentStack.size() );
                     }
                     break;
                 case -1: // AI wind Round
