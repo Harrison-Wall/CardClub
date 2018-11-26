@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             style="@style/testStyle"
-            android:text="Your Stack: 1" />
+            android:text="Your Stack: 0" />
 
         <TextView
             android:id="@+id/ai_stack"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             style="@style/testStyle"
-            android:text="AI Stack: 1" />
+            android:text="AI Stack: 0" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -80,7 +80,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="Draw" />
+            android:text="Draw"
+            android:onClick="drawCards"/>
 
     </RelativeLayout>
 

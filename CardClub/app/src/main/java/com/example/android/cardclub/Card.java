@@ -156,6 +156,10 @@ public class Card
         return mCurrY;
     }
 
+    public int getFaceID() { return mfaceID; }
+
+    public int getBackID() { return  mbackID; }
+
     public Bitmap getFaceMap() { return mFaceMap; }
 
     public Bitmap getBackMap() { return mBackMap; }
