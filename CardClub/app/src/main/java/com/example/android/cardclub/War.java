@@ -1,6 +1,8 @@
 package com.example.android.cardclub;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,15 +23,19 @@ public class War extends Activity
     private Stack<Card> opponentStack;
     private Queue<Card> oppnentQueue; // Change to Queue
 
+    Bundle pSavedSate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        pSavedSate = savedInstanceState;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.war_view);
 
         // Set up piles and stacks
         mDeck = new Deck(this);
-        mDeck.shuffleDeck();
+        //mDeck.shuffleDeck();
 
         userStack = new Stack<Card>();
         userQueue = new LinkedList<Card>();
@@ -120,8 +126,7 @@ public class War extends Activity
             Toast mWinner = Toast.makeText(this, "Game Lost.", Toast.LENGTH_LONG);
             mWinner.show();
 
-            // TODO: Change to an Alert Dialogue
-
+            showAlert();
         }
         else if( oppnentQueue.isEmpty() )
         {
@@ -129,7 +134,7 @@ public class War extends Activity
             Toast mWinner = Toast.makeText(this, "Game Won.", Toast.LENGTH_LONG);
             mWinner.show();
 
-            // TODO: Change to an Alert Dialogue
+            showAlert();
         }
 
         return;
@@ -200,5 +205,36 @@ public class War extends Activity
         }
 
         return retVal;
+    }
+
+    public void showAlert()
+    {
+        // Show and Alert Message https://www.tutorialspoint.com/android/android_alert_dialoges.html
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setMessage("Game Over!");
+
+        alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                // TODO: Reset Game Data
+                onCreate(pSavedSate);
+            }
+        });
+
+        alertBuilder.setNegativeButton("Home", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                finish();
+            }
+        });
+
+        AlertDialog myAlert = alertBuilder.create();
+        myAlert.show();
+
+        return;
     }
 }

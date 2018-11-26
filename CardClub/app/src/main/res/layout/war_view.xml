@@ -114,6 +114,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:text="Draw"
+            android:textSize="22sp"
             android:onClick="drawCards"/>
 
     </RelativeLayout>
