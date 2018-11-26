@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Stack;
 
@@ -50,13 +51,34 @@ public class War extends Activity
 
     public void drawCards(View view)
     {
-        userStack.push( userPile.pop() );
-        userCardCount--;
-        updateUserCard( userStack.peek() );
+        if( !userPile.empty() )
+        {
+            userStack.push( userPile.pop() );
+            userCardCount--;
 
-        opponentStack.push( oppnentPile.pop() );
-        opponentCardCount--;
-        updateOpponentCard( opponentStack.peek() );
+            updateUserCard( userStack.peek() );
+            updateUserScoreCount( userCardCount );
+            updateUserStackCount( userStack.size() );
+        }
+        else
+        {
+            return;
+        }
+
+        if( !oppnentPile.empty() )
+        {
+            opponentStack.push( oppnentPile.pop() );
+            opponentCardCount--;
+
+            updateOpponentCard( opponentStack.peek() );
+            updateOpponentScoreCount( opponentCardCount );
+            updateOpponentStackCount( opponentStack.size() );
+        }
+        else
+        {
+            return;
+        }
+
 
         return;
     }
@@ -70,9 +92,18 @@ public class War extends Activity
         return;
     }
 
-    public void updateUserCount(int pCount)
+    public void updateUserStackCount(int pCount)
     {
+        TextView userStackCount = (TextView) findViewById( R.id.user_stack_count );
+        userStackCount.setText( ""+pCount );
 
+        return;
+    }
+
+    public void updateUserScoreCount(int pCount)
+    {
+        TextView userScoreCount = (TextView) findViewById( R.id.user_score_count );
+        userScoreCount.setText( ""+pCount );
 
         return;
     }
@@ -82,6 +113,22 @@ public class War extends Activity
         ImageView opponentCard = (ImageView) findViewById( R.id.ai_card );
 
         opponentCard.setImageResource( pCard.getFaceID() );
+
+        return;
+    }
+
+    public void updateOpponentStackCount( int pCount )
+    {
+        TextView opponentStackCount = (TextView) findViewById( R.id.ai_stack_count );
+        opponentStackCount.setText( ""+pCount );
+
+        return;
+    }
+
+    public void updateOpponentScoreCount( int pCount )
+    {
+        TextView opponentScoreCount = (TextView) findViewById( R.id.ai_score_count );
+        opponentScoreCount.setText( ""+pCount );
 
         return;
     }
