@@ -36,10 +36,12 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/dealer_card_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/dealer_card"
                 android:layout_width="75dp"
                 android:layout_height="150dp"
                 android:src="@drawable/red_back"/>
@@ -78,10 +80,12 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/user_card_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/user_card"
                 android:layout_width="75dp"
                 android:layout_height="150dp"
                 android:src="@drawable/blue_back"/>
