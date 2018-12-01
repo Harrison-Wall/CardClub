@@ -35,8 +35,9 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/dealer_card_group"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -46,7 +47,7 @@
                 android:layout_height="150dp"
                 android:src="@drawable/red_back"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -79,8 +80,9 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/user_card_group"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -90,7 +92,7 @@
                 android:layout_height="150dp"
                 android:src="@drawable/blue_back"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
