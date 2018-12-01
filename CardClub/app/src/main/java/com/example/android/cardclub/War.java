@@ -35,7 +35,7 @@ public class War extends Activity
 
         // Set up piles and stacks
         mDeck = new Deck(this);
-        //mDeck.shuffleDeck();
+        mDeck.shuffleDeck();
 
         userStack = new Stack<Card>();
         userQueue = new LinkedList<Card>();
@@ -218,8 +218,7 @@ public class War extends Activity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                // TODO: Reset Game Data
-                onCreate(pSavedSate);
+                onCreate(pSavedSate); // New Game
             }
         });
 

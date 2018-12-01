@@ -6,8 +6,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.View;
 
-import com.example.android.cardclub.testClasses.testDrawable;
-
 public class CustomDrawableView extends View
 {
     private ShapeDrawable mDrawable;

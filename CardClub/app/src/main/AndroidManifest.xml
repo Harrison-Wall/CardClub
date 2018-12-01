@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.android.cardclub.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,12 +18,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Solitaire"
+        <activity android:name="com.example.android.cardclub.Solitaire"
             android:label="Solitaire">
         </activity>
 
-        <activity android:name=".War"
+        <activity android:name="com.example.android.cardclub.War"
             android:label="War">
+        </activity>
+        
+        <activity android:name="com.example.android.cardclub.BlackJack"
+            android:label="BlackJack">
+
         </activity>
 
     </application>
