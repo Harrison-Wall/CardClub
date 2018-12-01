@@ -70,6 +70,8 @@ public class BlackJack extends Activity
         dealerScoreView = (TextView) findViewById( R.id.dealer_score );
         userScoreView = (TextView) findViewById( R.id.user_score );
 
+        //--------------------------------------------------------------------------------------------
+
         // Dealer and User both get two cards
         dealerInitialCard = (ImageView) findViewById( R.id.dealer_card );
         dealerCards.add( mDeck.dealCard() ); // Needs to remain faceDown until user hits stay
@@ -85,7 +87,7 @@ public class BlackJack extends Activity
         //Add the the Relative layout
         dealerCardGroup.addView( newCard, myparams );
 
-
+        //--------------------------------------------------------------------------------------------
 
         // Set up user Cards
         userInitialCard = (ImageView) findViewById( R.id.user_card );
@@ -108,12 +110,20 @@ public class BlackJack extends Activity
 
     public void hitMe()
     {
+        //add a new card to user
 
+        //update score
+
+        //check if lose/win
     }
 
     public void stay()
     {
+        //update dealer score
 
+        // determin if dealer should keep drawing
+
+        // determin winner
     }
 
     public int calculateScore(Vector<Card> pVect )
@@ -129,10 +139,5 @@ public class BlackJack extends Activity
         // if 1 then either 1 or 10
 
         return retVal;
-    }
-
-    public void updateScores()
-    {
-
     }
 }
