@@ -71,17 +71,15 @@ public class BlackJack extends Activity
         // Dealer and User both get two cards
         dealerInitialCard = (ImageView) findViewById( R.id.dealer_card );
         dealerCards.add( mDeck.dealCard() ); // Needs to remain faceDown until user hits stay
+        dealerCards.get(0).turnDown();
 
         // Set limits
         myparams =  dealerInitialCard.getLayoutParams();
 
         // Deal and Create a new ImageView Card
         dealerCards.add( mDeck.dealCard() );
-        ImageView newCard = new ImageView(this);
-        newCard.setImageResource( dealerCards.get(1).getFaceID() );
 
-        //Add the the Relative layout
-        dealerCardGroup.addView( newCard, myparams );
+        addDealerCardImage( dealerCards.get(1) );
 
         sortCards( dealerCards );
 
@@ -105,9 +103,7 @@ public class BlackJack extends Activity
             Card tempCard = mDeck.dealCard();
             userCards.add( tempCard );
 
-            ImageView tempView = new ImageView(this);
-            tempView.setImageResource( tempCard.getFaceID() );
-            userCardGroup.addView( tempView, myparams );
+            addUserCardImage(tempCard);
 
             sortCards( userCards );
 
@@ -122,13 +118,32 @@ public class BlackJack extends Activity
 
     public void stay()
     {
-        // give dealer another card
+        if( !dealerCards.get(0).isFaceUp() )
+        {
+            dealerCards.get(0).turnUp();
+            dealerInitialCard.setImageResource( dealerCards.get(0).getFaceID() ); // Flip up dealers initial card
+            dealerScore = calculateScore( dealerCards ); // update dealer score
+            dealerScoreView.setText(""+dealerScore);
+            hasDealerWon();
+        }
 
-        // update dealer score
 
         // determine if dealer should keep drawing
 
-        // determine winner
+        if( mDeck.getCardsDelt() < 52 && dealerScore < 16 ) // Dealer does not draw if score is > 16
+        {
+            Card tempCard = mDeck.dealCard();
+            dealerCards.add( tempCard );
+
+            addDealerCardImage(tempCard);
+
+            sortCards(dealerCards);
+
+            dealerScore = calculateScore( dealerCards ); // update dealer score
+            dealerScoreView.setText(""+dealerScore);
+        }
+
+        hasDealerWon();
     }
 
     public int calculateScore( ArrayList<Card> pList )
@@ -167,6 +182,8 @@ public class BlackJack extends Activity
         // If it is >21 check if making all aces low will fix it
         if( retVal > 21 )
         {
+            retVal = 0;
+
             for( int i = listSize; i >= 0; i-- ) // Checks Highest value cards first (Aces assumed low to begin with)
             {
                 cardValue = pList.get(i).getValue();
@@ -214,14 +231,59 @@ public class BlackJack extends Activity
         if( userScore > 21 ) // you Lose!
         {
             // Show Alert
-            finish();
+           // finish();
         }
         else if( userScore == 21 ) // you won!
         {
             // Show Alert
-            finish();
+           // finish();
         }
 
         // Else keep going!
+    }
+
+    public void hasDealerWon()
+    {
+        if( dealerScore > 21 ) // you won!
+        {
+
+        }
+        else if( dealerScore == 21 ) // you lose!
+        {
+
+        }
+        else if( dealerScore == userScore ) // Tie
+        {
+
+        }
+        else if (dealerScore > userScore) // you lose!
+        {
+
+        }
+    }
+
+    public void addUserCardImage(Card pCard)
+    {
+        /*// https://stackoverflow.com/questions/17481341/how-to-get-android-screen-size-programmatically-once-and-for-all
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        if( userCardGroup.getWidth() <= width ) // If it has gone past the screen go to another row
+        {
+            userCardGroup = (LinearLayout) findViewById( R.id.user_card_group_2 );
+        }*/
+
+        ImageView tempView = new ImageView(this);
+        tempView.setImageResource( pCard.getFaceID() );
+        userCardGroup.addView( tempView, myparams );
+    }
+
+    public void addDealerCardImage(Card pCard)
+    {
+        ImageView tempView = new ImageView(this);
+        tempView.setImageResource( pCard.getFaceID() );
+        dealerCardGroup.addView( tempView, myparams );
     }
 }
