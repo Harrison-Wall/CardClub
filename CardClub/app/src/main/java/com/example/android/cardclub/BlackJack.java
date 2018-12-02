@@ -3,6 +3,7 @@ package com.example.android.cardclub;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,13 +26,13 @@ public class BlackJack extends Activity
     private TextView userScoreView, dealerScoreView;
     private ViewGroup.LayoutParams myparams;
 
-    Bundle pSavedSate;
+    Bundle mSavedState;
     String gameOverMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        pSavedSate = savedInstanceState;
+        mSavedState = savedInstanceState;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.black_view);
@@ -89,8 +89,6 @@ public class BlackJack extends Activity
 
         addDealerCardImage( dealerCards.get(1) );
 
-        sortCards( dealerCards );
-
         //--------------------------------------------------------------------------------------------
 
         // Set up user Cards
@@ -103,9 +101,13 @@ public class BlackJack extends Activity
 
     public void hitMe()
     {
-        hasUserWon(); // is the current hand good?
+        if(  hasUserWon() )// is the current hand good?
+        {
+            showAlert();
+            return;
+        }
 
-        if( mDeck.getCardsDelt() < 52 )
+        if( mDeck.getCardsDelt() < 52 && userScore < 21 )
         {
             //add a new card to user
             Card tempCard = mDeck.dealCard();
@@ -121,7 +123,11 @@ public class BlackJack extends Activity
         }
 
         //check if lose/win
-        hasUserWon();
+       if(  hasUserWon() )
+       {
+           showAlert();
+           return;
+       }
     }
 
     public void stay()
@@ -130,11 +136,18 @@ public class BlackJack extends Activity
         {
             dealerCards.get(0).turnUp();
             dealerInitialCard.setImageResource( dealerCards.get(0).getFaceID() ); // Flip up dealers initial card
+
+            sortCards(dealerCards); // Can now safely sort them
+
             dealerScore = calculateScore( dealerCards ); // update dealer score
             dealerScoreView.setText(""+dealerScore);
-            hasDealerWon();
         }
 
+        if(  hasDealerWon() )
+        {
+            showAlert();
+            return;
+        }
 
         // determine if dealer should keep drawing
         while( mDeck.getCardsDelt() < 52 && dealerScore < 16 ) // Dealer does not draw if score is > 16
@@ -149,12 +162,12 @@ public class BlackJack extends Activity
             dealerScore = calculateScore( dealerCards ); // update dealer score
             dealerScoreView.setText(""+dealerScore);
 
-            hasDealerWon();
+            if(  hasDealerWon() )
+            {
+                showAlert();
+                return;
+            }
         }
-
-        dealerScore = calculateScore( dealerCards ); // update dealer score
-        dealerScoreView.setText(""+dealerScore);
-        hasDealerWon();
     }
 
     public int calculateScore( ArrayList<Card> pList )
@@ -237,49 +250,55 @@ public class BlackJack extends Activity
         }
     }
 
-    public void hasUserWon()
+    public boolean hasUserWon()
     {
+        boolean retVal = false;
+
         if( userScore > 21 ) // you Lose!
         {
             gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
-            showAlert();
+            retVal = true;
         }
         else if( userScore == 21 ) // you won!
         {
             gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
-            showAlert();
+            retVal = true;
         }
 
-        // Else keep going!
+        return retVal;
     }
 
-    public void hasDealerWon()
+    public boolean hasDealerWon()
     {
-        if( dealerScore > 21 ) // you won!
+        boolean retVal = false;
+
+        if( dealerScore > 21) // you won!
         {
             gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
-            showAlert();
+            retVal = true;
         }
         else if( dealerScore == 21 ) // you lose!
         {
             gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
-            showAlert();
+            retVal = true;
         }
-        else if( dealerScore == userScore ) // Tie
-        {
-            gameOverMessage = "Tie Game! " + userScore + " to " + dealerScore;
-            showAlert();
-        }
-        else if (dealerScore > userScore) // you lose!
+        else if(dealerScore > userScore ) // you lose!
         {
             gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
-            showAlert();
+            retVal = true;
         }
-        else
+        else if( dealerScore == userScore  && dealerScore >= 16) // Tie
+        {
+            gameOverMessage = "Tie Game! " + userScore + " to " + dealerScore;
+            retVal = true;
+        }
+        else if( userScore > dealerScore && dealerScore >= 16)
         {
             gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
-            showAlert();
+            retVal = true;
         }
+
+        return retVal;
     }
 
     public void addUserCardImage(Card pCard)
@@ -311,6 +330,8 @@ public class BlackJack extends Activity
     {
         // Show and Alert Message https://www.tutorialspoint.com/android/android_alert_dialoges.html
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+
+        alertBuilder.setTitle("Game Over");
         alertBuilder.setMessage(gameOverMessage);
 
         alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
@@ -318,8 +339,8 @@ public class BlackJack extends Activity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                reset();
-                onCreate(pSavedSate); // New Game
+                // Got a lot of weird bugs where alert box would not go away
+                onCreate( mSavedState );
             }
         });
 
@@ -336,16 +357,5 @@ public class BlackJack extends Activity
         myAlert.show();
 
         return;
-    }
-
-    public void reset()
-    {
-        userScore = 0;
-        dealerScore = 0;
-
-        dealerCards.clear();
-        userCards.clear();
-
-        mDeck = new Deck(this);
     }
 }
