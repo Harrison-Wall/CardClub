@@ -1,6 +1,8 @@
 package com.example.android.cardclub;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +26,14 @@ public class BlackJack extends Activity
     private TextView userScoreView, dealerScoreView;
     private ViewGroup.LayoutParams myparams;
 
+    Bundle pSavedSate;
+    String gameOverMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        pSavedSate = savedInstanceState;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.black_view);
 
@@ -145,6 +152,8 @@ public class BlackJack extends Activity
             hasDealerWon();
         }
 
+        dealerScore = calculateScore( dealerCards ); // update dealer score
+        dealerScoreView.setText(""+dealerScore);
         hasDealerWon();
     }
 
@@ -232,17 +241,13 @@ public class BlackJack extends Activity
     {
         if( userScore > 21 ) // you Lose!
         {
-            // Show Alert
-           // finish();
-            Toast meessage = Toast.makeText(this, "You Lose", Toast.LENGTH_SHORT);
-            meessage.show();
+            gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
+            showAlert();
         }
         else if( userScore == 21 ) // you won!
         {
-            // Show Alert
-           // finish();
-            Toast meessage = Toast.makeText(this, "You Won", Toast.LENGTH_SHORT);
-            meessage.show();
+            gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
+            showAlert();
         }
 
         // Else keep going!
@@ -252,28 +257,28 @@ public class BlackJack extends Activity
     {
         if( dealerScore > 21 ) // you won!
         {
-            Toast meessage = Toast.makeText(this, "You Won", Toast.LENGTH_SHORT);
-            meessage.show();
+            gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
+            showAlert();
         }
         else if( dealerScore == 21 ) // you lose!
         {
-            Toast meessage = Toast.makeText(this, "You Lose", Toast.LENGTH_SHORT);
-            meessage.show();
+            gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
+            showAlert();
         }
         else if( dealerScore == userScore ) // Tie
         {
-            Toast meessage = Toast.makeText(this, "Tie game", Toast.LENGTH_SHORT);
-            meessage.show();
+            gameOverMessage = "Tie Game! " + userScore + " to " + dealerScore;
+            showAlert();
         }
         else if (dealerScore > userScore) // you lose!
         {
-            Toast meessage = Toast.makeText(this, "You Lose", Toast.LENGTH_SHORT);
-            meessage.show();
+            gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
+            showAlert();
         }
         else
         {
-            Toast meessage = Toast.makeText(this, "You Won", Toast.LENGTH_SHORT);
-            meessage.show();
+            gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
+            showAlert();
         }
     }
 
@@ -300,5 +305,47 @@ public class BlackJack extends Activity
         ImageView tempView = new ImageView(this);
         tempView.setImageResource( pCard.getFaceID() );
         dealerCardGroup.addView( tempView, myparams );
+    }
+
+    public void showAlert()
+    {
+        // Show and Alert Message https://www.tutorialspoint.com/android/android_alert_dialoges.html
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setMessage(gameOverMessage);
+
+        alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                reset();
+                onCreate(pSavedSate); // New Game
+            }
+        });
+
+        alertBuilder.setNegativeButton("Home", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                finish();
+            }
+        });
+
+        AlertDialog myAlert = alertBuilder.create();
+        myAlert.show();
+
+        return;
+    }
+
+    public void reset()
+    {
+        userScore = 0;
+        dealerScore = 0;
+
+        dealerCards.clear();
+        userCards.clear();
+
+        mDeck = new Deck(this);
     }
 }
