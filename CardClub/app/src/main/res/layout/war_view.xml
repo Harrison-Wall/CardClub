@@ -20,7 +20,7 @@
                 android:id="@+id/user_stack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/user_stack_count"
                 style="@style/testStyle"
                 android:text="Your Stack: " />
 
@@ -29,15 +29,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/testStyle"
-                android:layout_toRightOf="@id/user_stack"
+                android:layout_toLeftOf="@id/stacks_divider"
                 android:text="0"/>
+
+            <View
+                android:id="@+id/stacks_divider"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 android:id="@+id/ai_stack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="0dp"
-                android:layout_toLeftOf="@+id/ai_stack_count"
+                android:layout_toRightOf="@+id/stacks_divider"
                 style="@style/testStyle"
                 android:text="AI Stack: " />
 
@@ -46,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/testStyle"
-                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/ai_stack"
                 android:text="0"/>
         </RelativeLayout>
 
@@ -59,14 +67,22 @@
                 android:id="@+id/user_card"
                 android:layout_width="150dp"
                 android:layout_height="300dp"
-                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/cards_divider"
                 android:src="@drawable/red_back" />
+
+            <View
+                android:id="@+id/cards_divider"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_centerHorizontal="true"/>
 
             <ImageView
                 android:id="@+id/ai_card"
                 android:layout_width="150dp"
                 android:layout_height="300dp"
-                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/cards_divider"
                 android:src="@drawable/blue_back" />
 
         </RelativeLayout>
@@ -80,7 +96,7 @@
                 android:id="@+id/user_Score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/user_score_count"
                 style="@style/testStyle"
                 android:text="Your Cards: " />
 
@@ -90,13 +106,21 @@
                 android:layout_height="wrap_content"
                 style="@style/testStyle"
                 android:text="26"
-                android:layout_toRightOf="@id/user_Score"/>
+                android:layout_toLeftOf="@id/scores_divider"/>
+
+            <View
+                android:id="@+id/scores_divider"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 android:id="@+id/ai_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/ai_score_count"
+                android:layout_toRightOf="@id/scores_divider"
                 style="@style/testStyle"
                 android:text="AI Cards: " />
 
@@ -105,7 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/testStyle"
-                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/ai_score"
                 android:text="26" />
         </RelativeLayout>
 
