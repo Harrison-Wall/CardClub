@@ -92,29 +92,30 @@ public class BlackJack extends Activity
         userCards.add( mDeck.dealCard() );
         userInitialCard.setImageResource( userCards.get(0).getFaceID() ); // Users first Card
 
-        userCards.add( mDeck.dealCard() );
-        ImageView tempCard = new ImageView(this);
-        tempCard.setImageResource( userCards.get(1).getFaceID() ); // Users second Card
-
-        userCardGroup.addView( tempCard, myparams );
-
-        sortCards( userCards );
-
-        // Calculate user Score
-        userScore = calculateScore( userCards );
-
-        // Update Score Views
-        //userScoreView.setText( userScore );
-
+        hitMe(); // user has two Cards to start
     }
 
     public void hitMe()
     {
-        //add a new card to user
+        if( mDeck.getCardsDelt() < 52 )
+        {
+            //add a new card to user
+            Card tempCard = mDeck.dealCard();
+            userCards.add( tempCard );
 
-        //update score
+            ImageView tempView = new ImageView(this);
+            tempView.setImageResource( tempCard.getFaceID() );
+            userCardGroup.addView( tempView, myparams );
+
+            sortCards( userCards );
+
+            //update score
+            userScore = calculateScore( userCards );
+            userScoreView.setText( ""+userScore );
+        }
 
         //check if lose/win
+        hasUserWon();
     }
 
     public void stay()
@@ -128,21 +129,43 @@ public class BlackJack extends Activity
 
     public int calculateScore( ArrayList<Card> pList )
     {
-        int retVal = -1; // Default to invalid
+        int retVal = 0;
+        int cardValue, listSize;
+
+        listSize = pList.size() -1;
 
         //Loop through vector
+        for( int i = listSize; i >= 0; i-- ) // Checks Highest value cards first (Aces assumed low to begin with0
+        {
+            cardValue = pList.get(i).getValue();
 
-        //tally up card values
-
-        //if >10 then just 10
-
-        // if 1 then either 1 or 10
+            if( cardValue > 10 ) // If K, J, Q
+            {
+                retVal += 10;
+            }
+            else if( cardValue == 1) // If it is an ace
+            {
+                if( retVal + 11 > 21 ) // If Aces high makes it too big
+                {
+                    retVal++;  // Aces low
+                }
+                else
+                {
+                    retVal += 11; // Aces high
+                }
+            }
+            else
+            {
+                retVal += cardValue;
+            }
+        }
 
         return retVal;
     }
 
     public void sortCards( ArrayList<Card> pList )
     {
+        // Intro to Algorithms: Insertion Sort
         Card tempCard;
         int i;
 
@@ -161,6 +184,20 @@ public class BlackJack extends Activity
 
                  pList.set( i+1, tempCard );
             }
+        }
+    }
+
+    public void hasUserWon()
+    {
+        if( userScore> 21 ) // you Lose!
+        {
+            // Show Alert
+            finish();
+        }
+        else if( userScore == 21 ) // you won!
+        {
+            // Show Alert
+            finish();
         }
     }
 }
