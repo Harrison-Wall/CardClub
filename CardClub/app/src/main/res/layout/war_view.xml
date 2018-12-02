@@ -1,123 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/background"
-    android:padding="16dp">
+    android:background="@color/background">
 
-    <RelativeLayout
-        android:id="@+id/stacks"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
 
-        <TextView
-            android:id="@+id/user_stack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            style="@style/testStyle"
-            android:text="Your Stack: " />
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/user_stack_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/testStyle"
-            android:layout_toRightOf="@id/user_stack"
-            android:text="0"/>
+        <RelativeLayout
+            android:id="@+id/stacks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/ai_stack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="0dp"
-            android:layout_toLeftOf="@+id/ai_stack_count"
-            style="@style/testStyle"
-            android:text="AI Stack: " />
+            <TextView
+                android:id="@+id/user_stack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                style="@style/testStyle"
+                android:text="Your Stack: " />
 
-        <TextView
-            android:id="@+id/ai_stack_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/testStyle"
-            android:layout_alignParentRight="true"
-            android:text="0"/>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/user_stack_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/testStyle"
+                android:layout_toRightOf="@id/user_stack"
+                android:text="0"/>
 
-    <RelativeLayout
-        android:id="@+id/cards"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/ai_stack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="0dp"
+                android:layout_toLeftOf="@+id/ai_stack_count"
+                style="@style/testStyle"
+                android:text="AI Stack: " />
 
-        <ImageView
-            android:id="@+id/user_card"
-            android:layout_width="150dp"
-            android:layout_height="300dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/red_back" />
+            <TextView
+                android:id="@+id/ai_stack_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/testStyle"
+                android:layout_alignParentRight="true"
+                android:text="0"/>
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/ai_card"
-            android:layout_width="150dp"
-            android:layout_height="300dp"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/blue_back" />
+        <RelativeLayout
+            android:id="@+id/cards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/user_card"
+                android:layout_width="150dp"
+                android:layout_height="300dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/red_back" />
 
-    <RelativeLayout
-        android:id="@+id/scores"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ai_card"
+                android:layout_width="150dp"
+                android:layout_height="300dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/blue_back" />
 
-        <TextView
-            android:id="@+id/user_Score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            style="@style/testStyle"
-            android:text="Your Cards: " />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/user_score_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/testStyle"
-            android:text="26"
-            android:layout_toRightOf="@id/user_Score"/>
+        <RelativeLayout
+            android:id="@+id/scores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/ai_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/ai_score_count"
-            style="@style/testStyle"
-            android:text="AI Cards: " />
+            <TextView
+                android:id="@+id/user_Score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                style="@style/testStyle"
+                android:text="Your Cards: " />
 
-        <TextView
-            android:id="@+id/ai_score_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/testStyle"
-            android:layout_alignParentRight="true"
-            android:text="26" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/user_score_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/testStyle"
+                android:text="26"
+                android:layout_toRightOf="@id/user_Score"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/ai_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/ai_score_count"
+                style="@style/testStyle"
+                android:text="AI Cards: " />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:text="Draw"
-            android:textSize="22sp"
-            android:onClick="drawCards"/>
+            <TextView
+                android:id="@+id/ai_score_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/testStyle"
+                android:layout_alignParentRight="true"
+                android:text="26" />
+        </RelativeLayout>
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:text="Draw"
+                android:textSize="22sp"
+                android:onClick="drawCards"/>
 
-</LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+

@@ -321,6 +321,7 @@ public class BlackJack extends Activity
 
         alertBuilder.setTitle("Game Over");
         alertBuilder.setMessage(gameOverMessage);
+        alertBuilder.setCancelable(false);
 
         alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
         {
