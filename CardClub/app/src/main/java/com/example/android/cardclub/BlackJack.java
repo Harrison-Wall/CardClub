@@ -97,6 +97,8 @@ public class BlackJack extends Activity
 
     public void hitMe()
     {
+        hasUserWon(); // is the current hand good?
+
         if( mDeck.getCardsDelt() < 52 )
         {
             //add a new card to user
@@ -120,11 +122,13 @@ public class BlackJack extends Activity
 
     public void stay()
     {
-        //update dealer score
+        // give dealer another card
 
-        // determin if dealer should keep drawing
+        // update dealer score
 
-        // determin winner
+        // determine if dealer should keep drawing
+
+        // determine winner
     }
 
     public int calculateScore( ArrayList<Card> pList )
@@ -135,7 +139,7 @@ public class BlackJack extends Activity
         listSize = pList.size() -1;
 
         //Loop through vector
-        for( int i = listSize; i >= 0; i-- ) // Checks Highest value cards first (Aces assumed low to begin with0
+        for( int i = listSize; i >= 0; i-- ) // Checks Highest value cards first (Aces assumed low to begin with)
         {
             cardValue = pList.get(i).getValue();
 
@@ -157,6 +161,24 @@ public class BlackJack extends Activity
             else
             {
                 retVal += cardValue;
+            }
+        }
+
+        // If it is >21 check if making all aces low will fix it
+        if( retVal > 21 )
+        {
+            for( int i = listSize; i >= 0; i-- ) // Checks Highest value cards first (Aces assumed low to begin with)
+            {
+                cardValue = pList.get(i).getValue();
+
+                if( cardValue > 10 ) // If K, J, Q
+                {
+                    retVal += 10;
+                }
+                else
+                {
+                    retVal += cardValue;
+                }
             }
         }
 
@@ -189,7 +211,7 @@ public class BlackJack extends Activity
 
     public void hasUserWon()
     {
-        if( userScore> 21 ) // you Lose!
+        if( userScore > 21 ) // you Lose!
         {
             // Show Alert
             finish();
@@ -199,5 +221,7 @@ public class BlackJack extends Activity
             // Show Alert
             finish();
         }
+
+        // Else keep going!
     }
 }
