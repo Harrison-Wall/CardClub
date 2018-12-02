@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -39,12 +40,16 @@ public class SolitaireView extends SurfaceView implements Runnable
 
     private CardStack tap, tapRunOff;
 
-    public SolitaireView(Context context, int pScreenX, int pScreenY)
+    private int density;
+
+    public SolitaireView(Context context, int pScreenX, int pScreenY, DisplayMetrics dm)
     {
         super(context);
 
+        density =  (int) dm.density;
+
         // Calculate spacing / layout
-        int density = (int)Math.sqrt(pScreenX*pScreenY); // 2000
+        density *= (1660000 / pScreenY);                 // 625
         int offAmount = pScreenY/25;                     // 100
         int topY = pScreenY/12;                          // 200
         int bottomY = pScreenY/4;                        // 640
@@ -246,7 +251,7 @@ public class SolitaireView extends SurfaceView implements Runnable
 
     public void fillBoard(Context context)
     {
-        mDeck = new Deck(context); // Create the Deck of Cards
+        mDeck = new Deck(context, density); // Create the Deck of Cards
         mDeck.shuffleDeck();
 
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )

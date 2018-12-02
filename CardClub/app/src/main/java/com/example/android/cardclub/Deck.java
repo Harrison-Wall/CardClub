@@ -45,7 +45,21 @@ public class Deck
 
         for ( int i = 0; i < deckSize; i++ )
         {
-            deckOfCards.add(new Card( ((i%13)+1), (i/13), false, 0, 0, resourceIDs[i], context ));
+            deckOfCards.add(new Card( ((i%13)+1), (i/13), false, 0, 0, resourceIDs[i], context, 2000 ));
+        }
+
+        cardsDelt = 0;
+    }
+
+    // Deck with display data in the cards
+    Deck(Context context, int pDensity)
+    {
+        resourceIDs = new int[deckSize];
+        addResources(resourceIDs);
+
+        for ( int i = 0; i < deckSize; i++ )
+        {
+            deckOfCards.add(new Card( ((i%13)+1), (i/13), false, 0, 0, resourceIDs[i], context, pDensity ));
         }
 
         cardsDelt = 0;

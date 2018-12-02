@@ -19,6 +19,7 @@
         </activity>
 
         <activity android:name="com.example.android.cardclub.Solitaire"
+            android:screenOrientation="portrait"
             android:label="Solitaire">
         </activity>
 

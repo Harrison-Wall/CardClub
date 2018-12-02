@@ -3,11 +3,11 @@ package com.example.android.cardclub;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Display;
 
 public class Solitaire extends Activity
 {
-    //declaring gameview
     private SolitaireView solitaireView;
 
     @Override
@@ -22,8 +22,11 @@ public class Solitaire extends Activity
         Point size = new Point();
         display.getSize(size);
 
+        DisplayMetrics dm = new DisplayMetrics();
+        display.getMetrics(dm);
+
         //Initializing game view object
-        solitaireView = new SolitaireView(this, size.x, size.y);
+        solitaireView = new SolitaireView(this, size.x, size.y, dm);
 
         //adding it to ContentView
         setContentView(solitaireView);

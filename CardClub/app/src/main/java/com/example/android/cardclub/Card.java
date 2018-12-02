@@ -43,7 +43,7 @@ public class Card
     }
 
     // specific card with full display data
-    Card(int pValue, int pSuit, boolean pFace, int pX, int pY, int prID, Context context)
+    Card(int pValue, int pSuit, boolean pFace, int pX, int pY, int prID, Context context, int pDensity)
     {
         mID = iCounter;
         miValue = pValue;
@@ -55,7 +55,7 @@ public class Card
         mfaceID = prID;
 
         mOps = new BitmapFactory.Options();
-        mOps.inDensity = 2000;
+        mOps.inDensity = pDensity;
 
         setFaceMap(context);
         setBackMap(context);
