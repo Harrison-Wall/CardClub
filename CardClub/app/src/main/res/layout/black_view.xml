@@ -1,146 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/background">
 
     <LinearLayout
-        android:id="@+id/dealer_group"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/dealer_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/dealer_score_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    style="@style/testStyle"
+                    android:text="Dealer Score: " />
+
+                <TextView
+                    android:id="@+id/dealer_score_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/testStyle"
+                    android:layout_toRightOf="@id/dealer_score_text"
+                    android:text="--"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/dealer_card_group"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/dealer_card"
+                    android:layout_width="75dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/red_back"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/user_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/user_score_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    style="@style/testStyle"
+                    android:text="Your Score: " />
+
+                <TextView
+                    android:id="@+id/user_score_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/testStyle"
+                    android:layout_toRightOf="@id/user_score_text"
+                    android:text="0"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/user_card_group"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/user_card"
+                    android:layout_width="75dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/blue_back"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <RelativeLayout
+            android:padding="16dp"
+            android:id="@+id/btn_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/dealer_score_text"
+            <Button
+                android:id="@+id/hit_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                style="@style/testStyle"
-                android:text="Dealer Score: " />
+                android:layout_toLeftOf="@id/divider"
+                android:text="Hit"/>
 
-            <TextView
-                android:id="@+id/dealer_score_num"
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:id="@+id/stay_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/testStyle"
-                android:layout_toRightOf="@id/dealer_score_text"
-                android:text="--"/>
+                android:layout_toRightOf="@id/divider"
+                android:text="Stay"/>
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/dealer_card_group"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/dealer_card"
-                android:layout_width="75dp"
-                android:layout_height="150dp"
-                android:src="@drawable/red_back"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/dealer_card_group_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/user_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
+</ScrollView>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/user_score_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                style="@style/testStyle"
-                android:text="Your Score: " />
-
-            <TextView
-                android:id="@+id/user_score_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/testStyle"
-                android:layout_toRightOf="@id/user_score_text"
-                android:text="0"/>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/user_card_group"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/user_card"
-                android:layout_width="75dp"
-                android:layout_height="150dp"
-                android:src="@drawable/blue_back"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/user_card_group_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:padding="16dp"
-        android:id="@+id/btn_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/hit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/divider"
-            android:text="Hit"/>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_centerHorizontal="true"/>
-
-        <Button
-            android:id="@+id/stay_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/divider"
-            android:text="Stay"/>
-
-    </RelativeLayout>
-
-
-</LinearLayout>

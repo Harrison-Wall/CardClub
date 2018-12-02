@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity
 
         //Create list of games
         final ArrayList<GameInfo> games = new ArrayList<GameInfo>();
-        games.add(new GameInfo(0, "Solitaire"));
-        games.add(new GameInfo(1, "BlackJack"));
+        games.add(new GameInfo(0, "Black Jack"));
+        games.add(new GameInfo(1, "Solitaire"));
         games.add(new GameInfo(2, "War"));
 
         //set the adapter
@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity
         switch(gameNum)
         {
             case 0:
-                gameIntent = new Intent(MainActivity.this, Solitaire.class); // Solitaire
+                gameIntent = new Intent(MainActivity.this, BlackJack.class); // Solitaire
                 break;
             case 1:
-                gameIntent = new Intent(MainActivity.this, BlackJack.class); // Solitaire
+                gameIntent = new Intent(MainActivity.this, Solitaire.class); // Solitaire
                 break;
             case 2:
                 gameIntent = new Intent(MainActivity.this, War.class); // Solitaire

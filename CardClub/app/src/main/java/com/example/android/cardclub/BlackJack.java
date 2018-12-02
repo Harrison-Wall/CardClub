@@ -3,7 +3,6 @@ package com.example.android.cardclub;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -303,17 +302,6 @@ public class BlackJack extends Activity
 
     public void addUserCardImage(Card pCard)
     {
-        /*// https://stackoverflow.com/questions/17481341/how-to-get-android-screen-size-programmatically-once-and-for-all
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-
-        if( userCardGroup.getWidth() <= width ) // If it has gone past the screen go to another row
-        {
-            userCardGroup = (LinearLayout) findViewById( R.id.user_card_group_2 );
-        }*/
-
         ImageView tempView = new ImageView(this);
         tempView.setImageResource( pCard.getFaceID() );
         userCardGroup.addView( tempView, myparams );
