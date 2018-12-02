@@ -7,20 +7,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class BlackJack extends Activity
 {
     private Deck mDeck;
-    private int userScore, dealerScore, cardWidth, cardHeight;
-    private Vector<Card> userCards, dealerCards;
+    private int userScore, dealerScore;
+    private ArrayList<Card> userCards, dealerCards;
 
     private ImageView dealerInitialCard, userInitialCard;
     private LinearLayout userCardGroup, dealerCardGroup;
-    private int marginOffset;
 
     private TextView userScoreView, dealerScoreView;
     private ViewGroup.LayoutParams myparams;
@@ -51,8 +49,6 @@ public class BlackJack extends Activity
             }
         });
 
-        marginOffset = 8;
-
         // Set up the card groups
         dealerCardGroup = (LinearLayout) findViewById( R.id.dealer_card_group );
         userCardGroup = (LinearLayout) findViewById( R.id.user_card_group );
@@ -61,14 +57,14 @@ public class BlackJack extends Activity
         mDeck.shuffleDeck();
 
         userScore = 0;
-        userCards = new Vector<Card>();
+        userCards = new ArrayList<Card>();
 
         dealerScore = 0;
-        dealerCards = new Vector<Card>();
+        dealerCards = new ArrayList<Card>();
 
         //Set up textviews
-        dealerScoreView = (TextView) findViewById( R.id.dealer_score );
-        userScoreView = (TextView) findViewById( R.id.user_score );
+        dealerScoreView = (TextView) findViewById( R.id.dealer_score_num );
+        userScoreView = (TextView) findViewById( R.id.user_score_num );
 
         //--------------------------------------------------------------------------------------------
 
@@ -87,6 +83,8 @@ public class BlackJack extends Activity
         //Add the the Relative layout
         dealerCardGroup.addView( newCard, myparams );
 
+        sortCards( dealerCards );
+
         //--------------------------------------------------------------------------------------------
 
         // Set up user Cards
@@ -100,11 +98,13 @@ public class BlackJack extends Activity
 
         userCardGroup.addView( tempCard, myparams );
 
+        sortCards( userCards );
+
         // Calculate user Score
         userScore = calculateScore( userCards );
 
         // Update Score Views
-        userScoreView.setText( userScore );
+        //userScoreView.setText( userScore );
 
     }
 
@@ -126,7 +126,7 @@ public class BlackJack extends Activity
         // determin winner
     }
 
-    public int calculateScore(Vector<Card> pVect )
+    public int calculateScore( ArrayList<Card> pList )
     {
         int retVal = -1; // Default to invalid
 
@@ -139,5 +139,28 @@ public class BlackJack extends Activity
         // if 1 then either 1 or 10
 
         return retVal;
+    }
+
+    public void sortCards( ArrayList<Card> pList )
+    {
+        Card tempCard;
+        int i;
+
+        if( pList.size() > 1 ) // Otherwise its already sorted
+        {
+            for( int j = 1; j < pList.size(); j++ )
+            {
+                 tempCard = pList.get(j);
+                 i = j-1;
+
+                 while( i >= 0 && pList.get(i).getValue() > tempCard.getValue() )
+                 {
+                     pList.set( i+1, pList.get(i) );
+                     i--;
+                 }
+
+                 pList.set( i+1, tempCard );
+            }
+        }
     }
 }
