@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -129,8 +130,7 @@ public class BlackJack extends Activity
 
 
         // determine if dealer should keep drawing
-
-        if( mDeck.getCardsDelt() < 52 && dealerScore < 16 ) // Dealer does not draw if score is > 16
+        while( mDeck.getCardsDelt() < 52 && dealerScore < 16 ) // Dealer does not draw if score is > 16
         {
             Card tempCard = mDeck.dealCard();
             dealerCards.add( tempCard );
@@ -141,6 +141,8 @@ public class BlackJack extends Activity
 
             dealerScore = calculateScore( dealerCards ); // update dealer score
             dealerScoreView.setText(""+dealerScore);
+
+            hasDealerWon();
         }
 
         hasDealerWon();
@@ -232,11 +234,15 @@ public class BlackJack extends Activity
         {
             // Show Alert
            // finish();
+            Toast meessage = Toast.makeText(this, "You Lose", Toast.LENGTH_SHORT);
+            meessage.show();
         }
         else if( userScore == 21 ) // you won!
         {
             // Show Alert
            // finish();
+            Toast meessage = Toast.makeText(this, "You Won", Toast.LENGTH_SHORT);
+            meessage.show();
         }
 
         // Else keep going!
@@ -246,19 +252,28 @@ public class BlackJack extends Activity
     {
         if( dealerScore > 21 ) // you won!
         {
-
+            Toast meessage = Toast.makeText(this, "You Won", Toast.LENGTH_SHORT);
+            meessage.show();
         }
         else if( dealerScore == 21 ) // you lose!
         {
-
+            Toast meessage = Toast.makeText(this, "You Lose", Toast.LENGTH_SHORT);
+            meessage.show();
         }
         else if( dealerScore == userScore ) // Tie
         {
-
+            Toast meessage = Toast.makeText(this, "Tie game", Toast.LENGTH_SHORT);
+            meessage.show();
         }
         else if (dealerScore > userScore) // you lose!
         {
-
+            Toast meessage = Toast.makeText(this, "You Lose", Toast.LENGTH_SHORT);
+            meessage.show();
+        }
+        else
+        {
+            Toast meessage = Toast.makeText(this, "You Won", Toast.LENGTH_SHORT);
+            meessage.show();
         }
     }
 
