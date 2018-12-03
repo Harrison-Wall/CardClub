@@ -1,6 +1,10 @@
-package com.example.android.cardclub;
+/*
+ * Harrison Wall
+ * 2018
+ * Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
+ */
 
-// Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
+package com.example.android.cardclub;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

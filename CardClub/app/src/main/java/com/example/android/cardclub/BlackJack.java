@@ -19,20 +19,20 @@ public class BlackJack extends Activity
     private int userScore, dealerScore;
     private ArrayList<Card> userCards, dealerCards;
 
-    private ImageView dealerInitialCard, userInitialCard;
-    private LinearLayout userCardGroup, dealerCardGroup;
+    private ImageView dealerInitialCard, userInitialCard; // Initial Cards in the Layout
+    private LinearLayout userCardGroup, dealerCardGroup;  // The ViewGroup containing the cards
 
-    private TextView userScoreView, dealerScoreView;
-    private ViewGroup.LayoutParams myparams;
+    private TextView userScoreView, dealerScoreView;      // TextViews holding the scores
+    private ViewGroup.LayoutParams myparams;              // Used to size cards properly
 
-    Bundle mSavedState;
+    Bundle mSavedState;     // used to start a new game
     String gameOverMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        // Set up the Layout
         mSavedState = savedInstanceState;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.black_view);
 
@@ -60,6 +60,7 @@ public class BlackJack extends Activity
         dealerCardGroup = (LinearLayout) findViewById( R.id.dealer_card_group );
         userCardGroup = (LinearLayout) findViewById( R.id.user_card_group );
 
+        // Set up decks, scores, and arrayLists
         mDeck = new Deck(this);
         mDeck.shuffleDeck();
 
@@ -69,54 +70,52 @@ public class BlackJack extends Activity
         dealerScore = 0;
         dealerCards = new ArrayList<Card>();
 
-        //Set up textviews
+        //Set up TextViews
         dealerScoreView = (TextView) findViewById( R.id.dealer_score_num );
         userScoreView = (TextView) findViewById( R.id.user_score_num );
 
-        //--------------------------------------------------------------------------------------------
+        //----------------Set up the Dealer's Cards---------------------------------------------------
 
-        // Dealer and User both get two cards
+        // Dealers first card
         dealerInitialCard = (ImageView) findViewById( R.id.dealer_card );
         dealerCards.add( mDeck.dealCard() ); // Needs to remain faceDown until user hits stay
-        dealerCards.get(0).turnDown();
 
-        // Set limits
+        // Set parameter for card size, etc
         myparams =  dealerInitialCard.getLayoutParams();
 
-        // Deal and Create a new ImageView Card
+        // Deal and Create a new ImageView Card for the dealer
         dealerCards.add( mDeck.dealCard() );
-
         addDealerCardImage( dealerCards.get(1) );
 
         //--------------------------------------------------------------------------------------------
 
-        // Set up user Cards
+        // Set up users first Card
         userInitialCard = (ImageView) findViewById( R.id.user_card );
         userCards.add( mDeck.dealCard() );
-        userInitialCard.setImageResource( userCards.get(0).getFaceID() ); // Users first Card
+        userInitialCard.setImageResource( userCards.get(0).getFaceID() );
 
-        hitMe(); // user has two Cards to start
+        hitMe(); // user has two Cards to start, same as hitting once
     }
 
+    // Draw once for the user each time
     public void hitMe()
     {
         if(  hasUserWon() )// is the current hand good?
         {
-            showAlert();
+            showAlert(); // End Game, show options
             return;
         }
 
-        if( mDeck.getCardsDelt() < 52 && userScore < 21 )
+        if( mDeck.getCardsDelt() < 52 && userScore < 21 ) // Can't draw if out of Cards, or user has lost
         {
             //add a new card to user
             Card tempCard = mDeck.dealCard();
             userCards.add( tempCard );
-
             addUserCardImage(tempCard);
 
-            sortCards( userCards );
+            sortCards( userCards ); // Sorts for more accurate counting
 
-            //update score
+            //update user score
             userScore = calculateScore( userCards );
             userScoreView.setText( ""+userScore );
         }
@@ -124,59 +123,58 @@ public class BlackJack extends Activity
         //check if lose/win
        if(  hasUserWon() )
        {
-           showAlert();
+           showAlert(); // End Game, show options
            return;
        }
     }
 
+    // Dealer draws until game is over
     public void stay()
     {
-        if( !dealerCards.get(0).isFaceUp() )
+        // Flip up dealers initial card
+        dealerInitialCard.setImageResource( dealerCards.get(0).getFaceID() );
+
+        sortCards(dealerCards); // Can now safely sort them
+
+        dealerScore = calculateScore( dealerCards ); // update dealer score
+        dealerScoreView.setText(""+dealerScore);
+
+        if(  hasDealerWon() ) // Do we need to draw?
         {
-            dealerCards.get(0).turnUp();
-            dealerInitialCard.setImageResource( dealerCards.get(0).getFaceID() ); // Flip up dealers initial card
-
-            sortCards(dealerCards); // Can now safely sort them
-
-            dealerScore = calculateScore( dealerCards ); // update dealer score
-            dealerScoreView.setText(""+dealerScore);
-        }
-
-        if(  hasDealerWon() )
-        {
-            showAlert();
+            showAlert(); // End Game, show options
             return;
         }
 
-        // determine if dealer should keep drawing
         while( mDeck.getCardsDelt() < 52 && dealerScore < 16 ) // Dealer does not draw if score is > 16
         {
+            // Give the dealer a card
             Card tempCard = mDeck.dealCard();
             dealerCards.add( tempCard );
-
             addDealerCardImage(tempCard);
 
             sortCards(dealerCards);
 
-            dealerScore = calculateScore( dealerCards ); // update dealer score
+            // update dealer score
+            dealerScore = calculateScore( dealerCards );
             dealerScoreView.setText(""+dealerScore);
 
-            if(  hasDealerWon() )
+            if(  hasDealerWon() ) // Do we need to keep drawing
             {
-                showAlert();
+                showAlert(); // End Game, show options
                 return;
             }
         }
     }
 
+    // Sum the up the cards
     public int calculateScore( ArrayList<Card> pList )
     {
         int retVal = 0;
         int cardValue, listSize;
 
+        // -1 since we loop from top ( ArrayList is sorted in ascending order ), leaving any aces for last
         listSize = pList.size() -1;
 
-        //Loop through vector
         for( int i = listSize; i >= 0; i-- ) // Checks Highest value cards first (Aces assumed low to begin with)
         {
             cardValue = pList.get(i).getValue();
@@ -217,7 +215,7 @@ public class BlackJack extends Activity
                 }
                 else
                 {
-                    retVal += cardValue;
+                    retVal += cardValue; // Ace value is 1
                 }
             }
         }
@@ -225,30 +223,31 @@ public class BlackJack extends Activity
         return retVal;
     }
 
+    // Sort the ArrayList in ascending order using insertion sort
     public void sortCards( ArrayList<Card> pList )
     {
-        // Intro to Algorithms: Insertion Sort
-        Card tempCard;
+        Card key;
         int i;
 
         if( pList.size() > 1 ) // Otherwise its already sorted
         {
-            for( int j = 1; j < pList.size(); j++ )
+            for( int j = 1; j < pList.size(); j++ ) // Start at 1 since we need atleast two cards (0, and 1)
             {
-                 tempCard = pList.get(j);
+                key = pList.get(j);
                  i = j-1;
 
-                 while( i >= 0 && pList.get(i).getValue() > tempCard.getValue() )
+                 while( i >= 0 && pList.get(i).getValue() > key.getValue() ) // Find the keys place in the order
                  {
                      pList.set( i+1, pList.get(i) );
                      i--;
                  }
 
-                 pList.set( i+1, tempCard );
+                 pList.set( i+1, key ); // Set they keys place
             }
         }
     }
 
+    // Check if the user has won (only done when user clicks on "hit")
     public boolean hasUserWon()
     {
         boolean retVal = false;
@@ -264,34 +263,37 @@ public class BlackJack extends Activity
             retVal = true;
         }
 
+        // Cases not involving 21 should be solved by the Dealer drawing
+
         return retVal;
     }
 
+    // Check for win condition, done when the user click "stay"
     public boolean hasDealerWon()
     {
         boolean retVal = false;
 
-        if( dealerScore > 21) // you won!
+        if( dealerScore > 21) // Dealer Bust
         {
             gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
             retVal = true;
         }
-        else if( dealerScore == 21 ) // you lose!
-        {
-            gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
-            retVal = true;
-        }
-        else if(dealerScore > userScore ) // you lose!
-        {
-            gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
-            retVal = true;
-        }
-        else if( dealerScore == userScore  && dealerScore >= 16) // Tie
+        else if( dealerScore == userScore  && dealerScore >= 16) // Tie Score, but only if the dealer isn't drawing anymore
         {
             gameOverMessage = "Tie Game! " + userScore + " to " + dealerScore;
             retVal = true;
         }
-        else if( userScore > dealerScore && dealerScore >= 16)
+        else if( dealerScore == 21 ) // Dealer got 21
+        {
+            gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
+            retVal = true;
+        }
+        else if(dealerScore > userScore ) // Dealer has higher score
+        {
+            gameOverMessage = "You Lose! " + userScore + " to " + dealerScore;
+            retVal = true;
+        }
+        else if( userScore > dealerScore && dealerScore >= 16) // User has higher score, but only if the dealer isn't drawing anymore
         {
             gameOverMessage = "You Won! " + userScore + " to " + dealerScore;
             retVal = true;
@@ -300,6 +302,7 @@ public class BlackJack extends Activity
         return retVal;
     }
 
+    // Creates and adds an ImageView of the given card to the users hand
     public void addUserCardImage(Card pCard)
     {
         ImageView tempView = new ImageView(this);
@@ -307,6 +310,7 @@ public class BlackJack extends Activity
         userCardGroup.addView( tempView, myparams );
     }
 
+    // Creates and adds an ImageView of the given card to the dealers hand
     public void addDealerCardImage(Card pCard)
     {
         ImageView tempView = new ImageView(this);
@@ -314,6 +318,7 @@ public class BlackJack extends Activity
         dealerCardGroup.addView( tempView, myparams );
     }
 
+    // End of Game box for user
     public void showAlert()
     {
         // Show and Alert Message https://www.tutorialspoint.com/android/android_alert_dialoges.html
@@ -323,6 +328,7 @@ public class BlackJack extends Activity
         alertBuilder.setMessage(gameOverMessage);
         alertBuilder.setCancelable(false);
 
+        // New Game, recreate using savedSate
         alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
         {
             @Override
@@ -333,6 +339,7 @@ public class BlackJack extends Activity
             }
         });
 
+        // Back to home
         alertBuilder.setNegativeButton("Home", new DialogInterface.OnClickListener()
         {
             @Override

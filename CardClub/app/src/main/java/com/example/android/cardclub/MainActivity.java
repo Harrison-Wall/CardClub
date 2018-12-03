@@ -1,3 +1,8 @@
+/*
+ * Harrison Wall
+ * 2018
+ */
+
 package com.example.android.cardclub;
 
 import android.content.Intent;
@@ -9,6 +14,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+// Displays the games list, and moves user between them
 public class MainActivity extends AppCompatActivity
 {
     @Override
@@ -36,11 +42,11 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
                 {
-                    // Get the {@link Word} object at the given position the user clicked on
+                    // Get the list item the user clicked on
                     GameInfo currGame = games.get(position);
 
+                    // Determine which activity to run, and start it
                     Intent gameIntent = getGameIntent(currGame.getID());
-
                     startActivity(gameIntent);
                 }
             }
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    // Build the intent, based on the game selected
     public Intent getGameIntent(int gameNum)
     {
         Intent gameIntent = new Intent();
@@ -55,13 +62,13 @@ public class MainActivity extends AppCompatActivity
         switch(gameNum)
         {
             case 0:
-                gameIntent = new Intent(MainActivity.this, BlackJack.class); // Solitaire
+                gameIntent = new Intent(MainActivity.this, BlackJack.class); // BlackJack
                 break;
             case 1:
                 gameIntent = new Intent(MainActivity.this, Solitaire.class); // Solitaire
                 break;
             case 2:
-                gameIntent = new Intent(MainActivity.this, War.class); // Solitaire
+                gameIntent = new Intent(MainActivity.this, War.class); // War
                 break;
         }
 

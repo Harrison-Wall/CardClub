@@ -1,5 +1,11 @@
+/*
+ * Harrison Wall
+ * 2018
+ */
+
 package com.example.android.cardclub;
 
+// Contains and ID and Name for a game
 public class GameInfo
 {
     private int ID; // Should be Unique, Used to start correct activity
@@ -17,6 +23,7 @@ public class GameInfo
         name = gName;
     }
 
+    // getters and setters
     public int getID()
     {
         return ID;
@@ -27,15 +34,7 @@ public class GameInfo
         return name;
     }
 
-    public void setID(int gNum)
-    {
-        ID = gNum;
-        return;
-    }
+    public void setID(int gNum) { ID = gNum; }
 
-    public void setName(String gName)
-    {
-        name = gName;
-        return;
-    }
+    public void setName(String gName) { name = gName; }
 }

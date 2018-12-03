@@ -1,3 +1,9 @@
+/*
+ * Harrison Wall
+ * 2018
+ * Help with views from : https://www.simplifiedcoding.net/android-game-development-tutorial-1/#Building-Game-View
+ */
+
 package com.example.android.cardclub;
 
 import android.app.Activity;
@@ -22,6 +28,7 @@ public class Solitaire extends Activity
         Point size = new Point();
         display.getSize(size);
 
+        // Get display metrics for configuring proper size and spacing of cards
         DisplayMetrics dm = new DisplayMetrics();
         display.getMetrics(dm);
 

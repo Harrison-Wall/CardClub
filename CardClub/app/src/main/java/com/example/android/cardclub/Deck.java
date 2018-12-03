@@ -1,20 +1,31 @@
+/*
+ * Harrison Wall
+ * 2016-2018
+ */
+
 package com.example.android.cardclub;
 
 import android.content.Context;
-
 import java.util.Random;
 import java.util.ArrayList;
 
+/**
+ * Collection of cards, uses an arrayList as a base.
+ */
 public class Deck
 {
     private int deckSize = 52, cardsDelt;
-    private int[] resourceIDs;
+    private int[] resourceIDs; // the IDs of the card faces for bitmaps
     private ArrayList<Card> deckOfCards = new ArrayList<Card>();
 
+    /**
+     * Standard Constructor for using text-based cards
+     */
     Deck( )
     {
         for ( int i = 0; i < deckSize; i++ )
         {
+            // Card( Value (1-13->A-K), Suit (0-3), faceUp or faceDown
             deckOfCards.add(new Card( ((i%13)+1), (i/13), false));
         }
 
@@ -31,27 +42,39 @@ public class Deck
 
         for ( int i = 0; i < deckSize; i++ )
         {
+            // Card( Value (1-13->A-K), Suit (0-3), faceUp or faceDown
             deckOfCards.add( new Card( ((i%13)+1), (i/13), false) );
         }
 
         cardsDelt = 0;
     }
 
-    // Deck with display data in the cards
+    /**
+     * Standard Sized deck with bitmap based cards
+     * @param context is passed to the cards so their bitmaps can be initialized
+     */
     Deck(Context context)
     {
+        // Fill array with all the resource IDs for easy assignment
+        // due to this the order of creation/assignment matters
         resourceIDs = new int[deckSize];
         addResources(resourceIDs);
 
+
         for ( int i = 0; i < deckSize; i++ )
         {
+            // Card( Value (1-13->A-K), Suit (0-3), faceUp or faceDown, coordinates, face bitmap image, context. size
             deckOfCards.add(new Card( ((i%13)+1), (i/13), false, 0, 0, resourceIDs[i], context, 2000 ));
         }
 
         cardsDelt = 0;
     }
 
-    // Deck with display data in the cards
+    /**
+     * Standard Sized deck with bitmap based cards
+     * @param context is passed to the cards so their bitmaps can be initialized
+     * @param pDensity is passed to the cards, determines their size
+     */
     Deck(Context context, int pDensity)
     {
         resourceIDs = new int[deckSize];
@@ -59,17 +82,19 @@ public class Deck
 
         for ( int i = 0; i < deckSize; i++ )
         {
+            // Card( Value (1-13->A-K), Suit (0-3), faceUp or faceDown, coordinates, face bitmap image, context. size
             deckOfCards.add(new Card( ((i%13)+1), (i/13), false, 0, 0, resourceIDs[i], context, pDensity ));
         }
 
         cardsDelt = 0;
     }
 
+    // gives the next card in the arrayList
     public Card dealCard()
     {
         Card retVal;
 
-        if( cardsDelt < deckSize )
+        if( cardsDelt < deckSize ) // Make sure there are still cards to give
         {
             retVal = getCard(cardsDelt);
             cardsDelt++;
@@ -82,6 +107,7 @@ public class Deck
         return retVal;
     }
 
+    // Randomize the deck
     public void shuffleDeck()
     {
 
@@ -106,6 +132,7 @@ public class Deck
 
     }
 
+    // Reorder the deck
     public void sortDeck()
     {
         Card.resetCounter();
@@ -119,10 +146,11 @@ public class Deck
         cardsDelt = 0;
     }
 
+    // Fills given array with the cards image IDs
     public void addResources(int array[])
     {
         // Card Images from: http://acbl.mybigcommerce.com/52-playing-cards/
-        if( array.length >= 51 )
+        if( array.length >= 51 ) // Array has to be big enough
         {
             // Clubs
             array[0] = R.drawable.c_a;
@@ -186,10 +214,7 @@ public class Deck
         }
     }
 
-    public Card getCard (int pIndex)
-    {
-        return deckOfCards.get(pIndex);
-    }
+    public Card getCard (int pIndex) { return deckOfCards.get(pIndex); }
 
     public int getSize () {return deckSize;}
 
