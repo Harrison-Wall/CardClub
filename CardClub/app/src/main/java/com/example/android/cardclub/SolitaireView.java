@@ -54,25 +54,28 @@ public class SolitaireView extends SurfaceView implements Runnable
         int topY = pScreenY/12;                          // 200
         int bottomY = pScreenY/4;                        // 640
         int xOffset = pScreenX/50;                       // 50
+        int cardGap = pScreenX/7;                        // 200
+        int topXGap = pScreenX/3;                        // 500
+        int tapXGap = pScreenX/5;                        // 300
 
         foundations = new CardStack[NUM_FOUNDATIONS];
         for( int i = 0; i < NUM_FOUNDATIONS; i++ )
         {
-            foundations[i] = new CardStack(0, (xOffset + (200*i) ), bottomY, offAmount, density, context); // ID: 0 == Normal Stack
+            foundations[i] = new CardStack(0, (xOffset + (cardGap*i) ), bottomY, offAmount, density, context); // ID: 0 == Normal Stack
         }
 
         //Set up 4 Piles
         piles = new CardStack[NUM_PILES];
         for( int i = 0; i < NUM_PILES; i++ )
         {
-            piles[i] = new CardStack(1, xOffset + (200*i), topY, 0, density, context); // ID: 0 = Pile Stack
+            piles[i] = new CardStack(1, xOffset + (cardGap*i), topY, 0, density, context); // ID: 0 = Pile Stack
         }
 
         //Set up 1 Empty Pile
-        tapRunOff = new CardStack(2, pScreenX-500, topY, 0, density, context);
+        tapRunOff = new CardStack(2, pScreenX-topXGap, topY, 0, density, context);
 
         //Set up 1 Pile with rest of deck
-        tap = new CardStack(3, pScreenX-300, topY, 0, density, context);
+        tap = new CardStack(3, pScreenX-tapXGap, topY, 0, density, context);
 
         fillBoard(context);
 
