@@ -1,3 +1,8 @@
+/*
+ * Harrison Wall
+ * 2018
+ */
+
 package com.example.android.cardclub;
 
 import android.app.Activity;
@@ -17,19 +22,21 @@ public class War extends Activity
 {
     private Deck mDeck;
 
-    private Stack<Card> userStack;
-    private Queue<Card> userQueue; // Change to Queue
+    private Stack<Card> userStack; // Holds the users current cards in contention
+    private Queue<Card> userQueue; // Holds the cards that were dealt to the user at the start
 
-    private Stack<Card> opponentStack;
-    private Queue<Card> oppnentQueue; // Change to Queue
+    private Stack<Card> opponentStack; // Holds the opponents current cards in contention
+    private Queue<Card> oppnentQueue; // Holds the opponents that were dealt to the user at the start
 
-    Bundle pSavedSate;
+    Bundle pSavedSate; // Used for restarting the game
+
+    String winMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        // Set up the layout
         pSavedSate = savedInstanceState;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.war_view);
 
@@ -42,22 +49,22 @@ public class War extends Activity
         opponentStack = new Stack<Card>();
         oppnentQueue = new LinkedList<Card>();
 
+        // Deck is divided between all player
         int halfDeck = mDeck.getSize()/2;
-
         for(int i = 0; i <halfDeck; i++)
         {
             userQueue.add( mDeck.dealCard() );
         }
-
         for(int i = 0; i <halfDeck; i++)
         {
             oppnentQueue.add( mDeck.dealCard() );
         }
     }
 
+    // Called when user clicks the "draw" button
     public void drawCards(View view)
     {
-        if( !userQueue.isEmpty() && !oppnentQueue.isEmpty() )
+        if( !userQueue.isEmpty() && !oppnentQueue.isEmpty() ) // While each queue has cards
         {
             // Take a card from the user
             userStack.push( userQueue.poll() );
@@ -81,6 +88,7 @@ public class War extends Activity
                         userStack.clear();
                         opponentStack.clear();
 
+                        // Update textViews
                         updateUserScoreCount( userQueue.size() );
                         updateUserStackCount( userStack.size() );
 
@@ -109,6 +117,7 @@ public class War extends Activity
                         userStack.clear();
                         opponentStack.clear();
 
+                        // Update textViews
                         updateUserScoreCount( userQueue.size() );
                         updateUserStackCount( userStack.size() );
 
@@ -126,6 +135,8 @@ public class War extends Activity
             Toast mWinner = Toast.makeText(this, "Game Lost.", Toast.LENGTH_LONG);
             mWinner.show();
 
+            winMessage = "You Lose!";
+
             showAlert();
         }
         else if( oppnentQueue.isEmpty() )
@@ -134,12 +145,15 @@ public class War extends Activity
             Toast mWinner = Toast.makeText(this, "Game Won.", Toast.LENGTH_LONG);
             mWinner.show();
 
+            winMessage = "You Win!";
+
             showAlert();
         }
 
         return;
     }
 
+    // Update the Image View for the users card
     public void updateUserCard(Card pCard )
     {
         ImageView userCard = (ImageView) findViewById( R.id.user_card );
@@ -149,6 +163,7 @@ public class War extends Activity
         return;
     }
 
+    // Update the TextView for the users stackCount
     public void updateUserStackCount(int pCount)
     {
         TextView userStackCount = (TextView) findViewById( R.id.user_stack_count );
@@ -157,6 +172,7 @@ public class War extends Activity
         return;
     }
 
+    // Update the TextView for the users score
     public void updateUserScoreCount(int pCount)
     {
         TextView userScoreCount = (TextView) findViewById( R.id.user_score_count );
@@ -165,6 +181,7 @@ public class War extends Activity
         return;
     }
 
+    // Update the Image View for the opponents card
     public void updateOpponentCard(Card pCard )
     {
         ImageView opponentCard = (ImageView) findViewById( R.id.ai_card );
@@ -174,6 +191,7 @@ public class War extends Activity
         return;
     }
 
+    // Update the TextView for the opponents stackCount
     public void updateOpponentStackCount( int pCount )
     {
         TextView opponentStackCount = (TextView) findViewById( R.id.ai_stack_count );
@@ -182,6 +200,7 @@ public class War extends Activity
         return;
     }
 
+    // Update the TextView for the opponents score
     public void updateOpponentScoreCount( int pCount )
     {
         TextView opponentScoreCount = (TextView) findViewById( R.id.ai_score_count );
@@ -207,11 +226,14 @@ public class War extends Activity
         return retVal;
     }
 
+    // End of Game Alert
     public void showAlert()
     {
         // Show and Alert Message https://www.tutorialspoint.com/android/android_alert_dialoges.html
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setMessage("Game Over!");
+        alertBuilder.setTitle("Game Over");
+        alertBuilder.setMessage(winMessage);
+        alertBuilder.setCancelable(false);
 
         alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
         {
@@ -227,7 +249,7 @@ public class War extends Activity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                finish();
+                finish(); // Back to main_activity
             }
         });
 
