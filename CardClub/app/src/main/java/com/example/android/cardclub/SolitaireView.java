@@ -358,7 +358,9 @@ public class SolitaireView extends SurfaceView implements Runnable
     {
         // Show and Alert Message https://www.tutorialspoint.com/android/android_alert_dialoges.html
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext());
+        alertBuilder.setTitle("Game Over");
         alertBuilder.setMessage("You Won!");
+        alertBuilder.setCancelable(false);
 
         // New Game should remove all cards, reshuffle and reDeal
         alertBuilder.setPositiveButton("New Game", new DialogInterface.OnClickListener()
